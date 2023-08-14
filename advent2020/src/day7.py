@@ -5,7 +5,7 @@ import json
 import os
 
 NO_OTHER = "no other"
-THE_ONE =  "shiny gold"
+THE_ONE = "shiny gold"
 
 
 def extractValue(key, input):
@@ -24,13 +24,14 @@ filename = "..\\data\\test.txt"
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 
+
 class Bag:
     def __init__(self, input):
         split = input.split(" contain ")
         self.name = split[0]
         tmpSecond = split[1]
-        self.kids  = []
-        if NO_OTHER != tmpSecond:             
+        self.kids = []
+        if NO_OTHER != tmpSecond:
             kids = split[1].split(", ")
             for kid in kids:
                 splitKid = kid.split(" ", 1)
@@ -50,43 +51,50 @@ for line in lines:
 
     bags.append(Bag(line))
 
+
 def findLineage():
-    shinyParents =  []
+    shinyParents = []
     parents = [THE_ONE]
 
     while len(parents) > 0:
         current = parents.pop(0)
-        for bag in bags:          
+        for bag in bags:
             for kid in bag.kids:
-                if kid['name'] == current and bag.name not in shinyParents:
+                if kid["name"] == current and bag.name not in shinyParents:
                     shinyParents.append(bag.name)
-                    parents.append(bag.name)       
-    print("the parents ... ", len(shinyParents) , shinyParents)             
+                    parents.append(bag.name)
+    print("the parents ... ", len(shinyParents), shinyParents)
 
-def findDescendants(name):
+
+def findDescendants(name, additions):
     retval = 0
-    print (name)
+    print(name)
     for bag in bags:
         if bag.name == name:
-            if len(bag.kids) == 0 : 
-                return 1 
+            if len(bag.kids) == 0:
+                return 1
             else:
                 for kid in bag.kids:
-                    kidNumber = int(kid['number'])
-                    descendant = findDescendants(kid['name']) 
-                    print (kidNumber , " * ",  descendant)
-                    retval +=  kidNumber +   (kidNumber * descendant)
-                    
-                print (retval)    
-                return retval    
+                    kidNumber = int(kid["number"])
+                    descendant = findDescendants(kid["name"], additions)
+                    if descendant != 1:
+                        additions.append(kidNumber)
+                    print(kidNumber, " * ", descendant)
+                    retval += kidNumber * descendant
+
+                print(retval)
+                return retval
+
 
 def part1():
     findLineage()
 
 
 def part2():
-    multiplier = []
-    total = findDescendants(THE_ONE )
+    additions = []
+    total = findDescendants(THE_ONE, additions)
+    print (additions)
+    total += sum(additions)
     print(total)
     pass
 
@@ -96,5 +104,3 @@ part2()
 
 
 # print(json.dumps(bags, default=lambda x: x.__dict__, indent=2))
-
- 
