@@ -63,18 +63,22 @@ def findLineage():
                     parents.append(bag.name)       
     print("the parents ... ", len(shinyParents) , shinyParents)             
 
-def findDescendants(name, multiplier):
+def findDescendants(name):
+    retval = 0
     print (name)
     for bag in bags:
         if bag.name == name:
             if len(bag.kids) == 0 : 
-                multiplier.append(1)
+                return 1 
             else:
                 for kid in bag.kids:
-                    multiplier.append(int(kid['number'])) 
-                    findDescendants(kid['name'], multiplier)
-    
-     
+                    kidNumber = int(kid['number'])
+                    descendant = findDescendants(kid['name']) 
+                    print (kidNumber , " * ",  descendant)
+                    retval +=  kidNumber +   (kidNumber * descendant)
+                    
+                print (retval)    
+                return retval    
 
 def part1():
     findLineage()
@@ -82,8 +86,8 @@ def part1():
 
 def part2():
     multiplier = []
-    findDescendants(THE_ONE, multiplier)
-    print(multiplier)
+    total = findDescendants(THE_ONE )
+    print(total)
     pass
 
 
