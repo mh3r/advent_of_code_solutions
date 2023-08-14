@@ -2,6 +2,12 @@ import functools
 import util
 import re
 import json
+import os 
+
+filename = "..\\data\\d6_input.txt"
+# filename = "..\\data\\test.txt"
+abs_file_path = os.path.join(os.path.dirname(__file__), filename)
+lines = open(abs_file_path, "r").readlines()
 
 
 def extractValue(key, input):
@@ -11,10 +17,6 @@ def extractValue(key, input):
     return retval
 
 
-file = "C:\\aoc\\data.txt"
-# file = "C:\\aoc\\sample.txt"
-
-Lines = open(file, "r").readlines()
 
 uniqueAnswers = []
 tmpSet = set()
@@ -33,7 +35,7 @@ def groupCounter(a, b):
     return len(a) + len(b)
 
 
-for line in Lines:
+for line in lines:
     line = line.strip()
     if line == "":
         tmpSet = set()
@@ -64,5 +66,5 @@ print("uniqueAnswers", uniqueAnswers)
 print("groupAnswers", groupAnswers)
 
 
-# part1()
+part1()
 part2()

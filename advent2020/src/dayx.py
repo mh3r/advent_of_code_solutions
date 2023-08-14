@@ -3,7 +3,7 @@ from functools import reduce
 import util
 import re
 import json
-
+import os
 
 def part1():
     pass
@@ -13,10 +13,10 @@ def part2():
     pass
 
 
-filename = "D:\\aoc\\advent2020\\data\\d3_input.txt"
-# filename = "D:\\aoc\\advent2020\\data\\test.txt"
-
-input = open(filename, "r").readlines()
+filename = "..\\data\\d6_input.txt"
+# filename = "..\\data\\test.txt"
+abs_file_path = os.path.join(os.path.dirname(__file__), filename)
+lines = open(abs_file_path, "r").readlines()
 
 part1()
 part2()

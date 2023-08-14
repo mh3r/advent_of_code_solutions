@@ -2,6 +2,7 @@ import functools
 import util
 import re
 import json
+import os
 
 NO_OTHER = "no other"
 THE_ONE =  "shiny gold"
@@ -17,20 +18,20 @@ def extractValue(key, input):
 file = "C:\\aoc\\data.txt"
 file = "C:\\aoc\\sample.txt"
 
-lines = open(file, "r").readlines()
 
+filename = "..\\data\\d7_input.txt"
+filename = "..\\data\\test.txt"
+abs_file_path = os.path.join(os.path.dirname(__file__), filename)
+lines = open(abs_file_path, "r").readlines()
 
 class Bag:
     def __init__(self, input):
         split = input.split(" contain ")
         self.name = split[0]
         tmpSecond = split[1]
-        self.kids = None
-        self.parents               = None
-        if NO_OTHER != tmpSecond:
-            self.kids = []
+        self.kids  = []
+        if NO_OTHER != tmpSecond:             
             kids = split[1].split(", ")
-            print(kids)
             for kid in kids:
                 splitKid = kid.split(" ", 1)
                 tmpJson = {"name": splitKid[1], "number": int(splitKid[0])}
@@ -48,7 +49,6 @@ for line in lines:
     )
 
     bags.append(Bag(line))
-    print(line)
 
 def findLineage():
     shinyParents =  []
@@ -56,23 +56,41 @@ def findLineage():
 
     while len(parents) > 0:
         current = parents.pop(0)
-        for bag in bags:
-            if bag.kids != None:
+        for bag in bags:          
+            for kid in bag.kids:
+                if kid['name'] == current and bag.name not in shinyParents:
+                    shinyParents.append(bag.name)
+                    parents.append(bag.name)       
+    print("the parents ... ", len(shinyParents) , shinyParents)             
+
+def findDescendants(name, multiplier):
+    print (name)
+    for bag in bags:
+        if bag.name == name:
+            if len(bag.kids) == 0 : 
+                multiplier.append(1)
+            else:
                 for kid in bag.kids:
-                    if kid.name ==  current:
-                        pass
-        pass
+                    multiplier.append(int(kid['number'])) 
+                    findDescendants(kid['name'], multiplier)
+    
+     
 
 def part1():
-    pass
+    findLineage()
 
 
 def part2():
+    multiplier = []
+    findDescendants(THE_ONE, multiplier)
+    print(multiplier)
     pass
 
 
-part1()
+# part1()
 part2()
 
 
-print(json.dumps(bags, default=lambda x: x.__dict__, indent=2))
+# print(json.dumps(bags, default=lambda x: x.__dict__, indent=2))
+
+ 
