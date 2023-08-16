@@ -68,7 +68,7 @@ def findLineage():
 
 def findDescendants(name):
     retval = 0
-    bag = findBag(name)
+    bag = list(filter(lambda x: x.name == name, bags))[0]
     # print (json.dumps(bag.__dict__))
     if len(bag.kids) == 0:
         retval = 0
@@ -80,10 +80,6 @@ def findDescendants(name):
     return retval
 
 
-def findBag(name):
-    return list(filter(lambda x: x.name == name, bags))[0]
-
-
 def part1():
     findLineage()
 
@@ -91,6 +87,7 @@ def part1():
 def part2():
     total = findDescendants(THE_ONE)
     print("total: ", total)
+
 
 # part1()
 part2()
