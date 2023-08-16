@@ -16,11 +16,11 @@ def extractValue(key, input):
 
 
 file = "C:\\aoc\\data.txt"
-file = "C:\\aoc\\sample.txt"
+# file = "C:\\aoc\\sample.txt"
 
 
 filename = "..\\data\\d7_input.txt"
-filename = "..\\data\\test.txt"
+# filename = "..\\data\\test.txt"
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 
@@ -66,24 +66,22 @@ def findLineage():
     print("the parents ... ", len(shinyParents), shinyParents)
 
 
-def findDescendants(name, additions):
+def findDescendants(name):
     retval = 0
-    print(name)
-    for bag in bags:
-        if bag.name == name:
-            if len(bag.kids) == 0:
-                return 1
-            else:
-                for kid in bag.kids:
-                    kidNumber = int(kid["number"])
-                    descendant = findDescendants(kid["name"], additions)
-                    if descendant != 1:
-                        additions.append(kidNumber)
-                    print(kidNumber, " * ", descendant)
-                    retval += kidNumber * descendant
+    bag = findBag(name)
+    # print (json.dumps(bag.__dict__))
+    if len(bag.kids) == 0:
+        retval = 0
+    else:
+        for kid in bag.kids:
+            kidNumber = int(kid["number"])
+            descendant = findDescendants(kid["name"])
+            retval += kidNumber + kidNumber * descendant
+    return retval
 
-                print(retval)
-                return retval
+
+def findBag(name):
+    return list(filter(lambda x: x.name == name, bags))[0]
 
 
 def part1():
@@ -91,13 +89,8 @@ def part1():
 
 
 def part2():
-    additions = []
-    total = findDescendants(THE_ONE, additions)
-    print (additions)
-    total += sum(additions)
-    print(total)
-    pass
-
+    total = findDescendants(THE_ONE)
+    print("total: ", total)
 
 # part1()
 part2()
