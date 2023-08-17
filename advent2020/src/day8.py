@@ -5,7 +5,7 @@ import json
 import os
 
 
-def runner():
+def runner(input):
     accumulator = 0
     cursor = 0
     visited = []
@@ -14,10 +14,11 @@ def runner():
             print("Part 1:", accumulator)
             accumulator = 0
             break
-        if cursor >= len(lines):
+        if cursor >= len(input):
+            print("Part 2:", accumulator)
             break
         visited.append(cursor)
-        split = lines[cursor].split(" ")
+        split = input[cursor].split(" ")
         op = split[0]
         volume = int(split[1])
         match op:
@@ -31,30 +32,53 @@ def runner():
     return accumulator
 
 
+def swap(input, index):
+    split = input[index].split(" ")
+    op = split[0]
+    volume = split[1]
+    match op:
+        case "nop":
+            op = "jmp"
+        case "jmp":
+            op = "nop"
+        case _:
+            pass
+    input[index] = op + " " + volume
+
+
 def part1():
-    runner()
+    runner(lines)
 
 
 def part2():
-    nonacc = []
+    nonaccs = []
     for index, val in enumerate(lines):
         split = val.split(" ")
         op = split[0]
         if op != "acc":
-            nonacc.append(index)
+            nonaccs.append(index)
 
-    print(nonacc)
+    for nonaccs in nonaccs:
+        linesCopy = lines.copy()
+        swap(linesCopy, nonaccs)
+        total = runner(linesCopy)
+        if total != 0:
+            break
+
+    # print(nonaccs)
+    # print(linesCopy)
+    # print(lines)
 
     pass
 
 
 filename = "..\\data\\d8_input.txt"
-filename = "..\\data\\test.txt"
+# filename = "..\\data\\test.txt"
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-part1()
+# part1()
 part2()
 
 
