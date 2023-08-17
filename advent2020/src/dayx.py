@@ -1,9 +1,10 @@
-from parse import *
+# from parse import *
 from functools import reduce
 import util
 import re
 import json
 import os
+
 
 def part1():
     pass
