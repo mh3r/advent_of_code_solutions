@@ -6,6 +6,11 @@ import json
 import os
 
 
+def switchToTest():
+    global filename
+    filename = "..\\data\\test.txt"
+
+
 def part1():
     pass
 
@@ -15,7 +20,7 @@ def part2():
 
 
 filename = "..\\data\\d6_input.txt"
-# filename = "..\\data\\test.txt"
+switchToTest()
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 
