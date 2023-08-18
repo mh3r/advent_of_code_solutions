@@ -2,7 +2,6 @@ import os
 import requests
 import creds
 
-
 srcPath = "advent2020/src/"
 dataPath = "advent2020/data/"
 dayXFileName = "dayx.py"
@@ -10,7 +9,6 @@ DX_INPUT = "dx_input"
 dayNumber = len(list(filter(lambda x: "day" in x, os.listdir(srcPath))))
 newSrcName = srcPath + "day{}.py".format(dayNumber)
 newDataName = dataPath + "d{}_input.txt".format(dayNumber)
-
 aocUrl = "https://adventofcode.com/2020/day/" + str(dayNumber) + "/input"
 
 
@@ -31,9 +29,11 @@ def copySrc():
 
 
 def downloadInputFile():
-    request = requests.get(aocUrl, allow_redirects=True, headers={"cookie": creds.COOKIE})    
-     
-    with open(newDataName, 'wb') as file:
+    request = requests.get(
+        aocUrl, allow_redirects=True, headers={"cookie": creds.COOKIE}
+    )
+
+    with open(newDataName, "wb") as file:
         file.write(request.content[:-1])
     print("Created: " + newDataName)
 
@@ -41,4 +41,4 @@ def downloadInputFile():
 copySrc()
 downloadInputFile()
 
-#  python -m pip install requests 
+#  python -m pip install requests
