@@ -34,12 +34,42 @@ def part1(lines):
     pass
 
 
-def part2():
+def aggregateCounter(index, lines, agg, head):
+    head = head.copy()
+    head.append(lines[index])
+    length = len(lines)
+    if index == length - 1:
+        agg.append(head)
+        return
+
+    # while index < len(lines):
+    jolt = lines[index]
+    for inc in range(1, 4):
+        tmp = jolt + inc
+        if tmp in lines:
+            aggregateCounter(list.index(lines, tmp), lines, agg, head)
+
+        # index += 1
+
+
+def part2_1(lines):
+    agg = []
+    lines.insert(0, 0)
+    total = aggregateCounter(0, lines, agg, [])
+    # print(*agg[:30], sep="\n")
+    print(len(agg))
+    pass
+
+
+def part2(lines):
+    for index, jolt in enumerate(lines):
+        print (jolt)
+        pass
     pass
 
 
 filename = "..\\data\\d10_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -48,5 +78,5 @@ lines.sort()
 
 # print (*lines, sep= "\n")
 
-part1(lines)
-part2()
+# part1(lines)
+part2(lines)
