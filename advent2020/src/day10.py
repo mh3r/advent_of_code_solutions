@@ -42,30 +42,49 @@ def aggregateCounter(index, lines, agg, head):
         agg.append(head)
         return
 
-    # while index < len(lines):
     jolt = lines[index]
     for inc in range(1, 4):
         tmp = jolt + inc
         if tmp in lines:
             aggregateCounter(list.index(lines, tmp), lines, agg, head)
 
-        # index += 1
-
 
 def part2_1(lines):
     agg = []
-    lines.insert(0, 0)
-    total = aggregateCounter(0, lines, agg, [])
+    print(lines)
+    aggregateCounter(0, lines, agg, [])
     # print(*agg[:30], sep="\n")
     print(len(agg))
-    pass
+    return len(agg)
 
 
 def part2(lines):
-    for index, jolt in enumerate(lines):
-        print (jolt)
-        pass
-    pass
+    multList = []
+    lines.insert(0, 0)
+    lines.append(max(lines))
+    index = 0
+    while index < len(lines):
+        i = 0
+        tmpList = [lines[index]]
+        while True:
+            current = lines[index]
+            index += 1
+
+            if index + 1 >= len(lines):
+                break
+
+            next = lines[index]
+            tmpList.append(next)
+            if next - current == 3:
+                index = list.index(lines, next)
+                break
+
+        if len(tmpList) > 2:
+            index = list.index(lines, tmpList[-1])
+            multList.append(part2_1(tmpList))
+
+    print(multList)
+    print(reduce(lambda x, y: x * y, multList))
 
 
 filename = "..\\data\\d10_input.txt"
