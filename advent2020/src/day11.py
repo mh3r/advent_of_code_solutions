@@ -35,20 +35,28 @@ def numberAdjacentOccupied(lines, y, x):
 def numberExtendedOccupied(lines, y, x):
     retval = 0
     for coords in util.ADJ_DIRS_2:
-        newX = x + coords[0]
-        newY = y + coords[1]
-        if (
-            newX >= 0
-            and newY >= 0
-            and newX < len(lines[0])
-            and newY < len(lines)
-            and lines[newY][newX] == OCCUPIED
-        ):
-            retval += 1
+        for i in range(1, 100):
+            newX = x + i * coords[0]
+            newY = y + i * coords[1]
+
+            if not (
+                newX >= 0 and newY >= 0 and newX < len(lines[0]) and newY < len(lines)
+            ):
+                break
+
+            tmpValue = lines[newY][newX]
+
+            if tmpValue == EMPTY:
+                break
+            elif tmpValue == FLOOR:
+                continue
+            elif tmpValue == OCCUPIED:
+                retval += 1
+                break
     return retval
 
 
-def runCycle(lines, isFirst):
+def runCycle(lines, isFirst=True):
     seatTolerance = 4 if isFirst else 5
     retval = None
     tmpCopy = copy.deepcopy(lines)
@@ -62,6 +70,7 @@ def runCycle(lines, isFirst):
                 if isFirst
                 else numberExtendedOccupied(lines, y, x)
             )
+
             if noOfOccupied == 0:
                 tmpCopy[y][x] = OCCUPIED
             elif noOfOccupied >= seatTolerance:
@@ -106,8 +115,17 @@ def part1(lines):
     occupiedCounter(current)
 
 
-def part2():
-    pass
+def part2(lines):
+    current = copy.deepcopy(lines)
+    while True:
+        result = runCycle(current, False)
+        if result == None:
+            break
+        else:
+            current = result
+
+    # printTable(current)
+    occupiedCounter(current)
 
 
 filename = "..\\data\\d11_input.txt"
@@ -119,6 +137,6 @@ lines = list(map(lambda x: list(x.strip()), lines))
 
 
 part1(lines)
-part2()
+part2(lines)
 
-# print(*lines, sep="\n")
+
