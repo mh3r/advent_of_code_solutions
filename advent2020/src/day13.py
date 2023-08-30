@@ -35,20 +35,34 @@ def part1(lines):
     print((departTime - start) * targetBus)
     pass
 
+
 """ 
 this is taking too long 
-instead of jumping on first element 
-jump on biggest element 
-but then you have to verify the numbers by the differences in the indexes instead of starting from 0 
-""" 
+even when changed to 
+jumping on biggest element 
+and verifying the numbers surrounding it 
+"""
+
+
 def part2(lines):
     busses = lines[1].split(",")
     start = 100000000000000
     end = 200000000000000
     departTime = 0
-    
-    firstModulusFound = False
-    firstBusId = int(busses[0])
+
+    start = 1000000
+    end = 2000000
+
+    # start = 1000000000
+    # end = 2000000000
+
+    busesInt = filter(lambda x: x != "x", busses)
+    busesInt = list(map(lambda x: int(x), busesInt))
+    maxBus = max(busesInt)
+
+    start = start + maxBus - start % maxBus
+    maxBusIndex = list.index(busses, str(maxBus))
+
     while start < end:
         for busIndex, busValue in enumerate(busses):
             busId = 0
@@ -57,25 +71,42 @@ def part2(lines):
             else:
                 busId = int(busValue)
 
-            if (start + busIndex) % busId != 0:
+            if (start + busIndex - maxBusIndex) % busId != 0:
                 break
 
             if busIndex == len(busses) - 1:
-                departTime = start
+                departTime = start - maxBusIndex
 
         if departTime > 0:
             break
 
-        if not firstModulusFound:
-            firstModulusFound = start % firstBusId == 0
-
-        if not firstModulusFound:   
-            start += 1
-        else:
-            start += firstBusId
+        start += maxBus
 
     print(departTime)
     pass
+
+
+# https://www.youtube.com/watch?v=zIFehsBHB8o&ab_channel=MathswithJay
+# https://www.youtube.com/watch?v=MdePzlQtnCc&ab_channel=CalculusbyChristee
+# chinese remainder theorem (Sun Tzu)
+def part2_crt(lines):
+    rawBusses = lines[1].split(",")
+    remainderList = []
+    modulusList = []
+
+    for index, bus in enumerate(rawBusses):
+        if bus != "x":
+            number = int(bus)
+            modulusList.append(number)
+            remainderList.append((number - index) % number)
+
+    modProduct = reduce(lambda x, y: x * y, modulusList)
+    miList = [modProduct // n for n in modulusList]
+    xiList = [pow(mi, -1, modulusList[index]) for index, mi in enumerate(miList)]
+    rimixiList = [
+        remainderList[index] * mi * xiList[index] for index, mi in enumerate(miList)
+    ]
+    print(sum(rimixiList) % modProduct)
 
 
 def processInput(lines):
@@ -92,7 +123,7 @@ def processInput(lines):
 
 
 filename = "..\\data\\d13_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -102,4 +133,4 @@ lines = list(map(lambda x: x.strip(), lines))
 
 
 # part1(lines)
-part2(lines)
+part2_crt(lines)

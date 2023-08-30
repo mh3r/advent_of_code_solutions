@@ -2,3 +2,5 @@
 
 .vscode/
 advent2020/src/__pycache__/
+advent2020/src/__pycache__/*.*
+*.pyc
