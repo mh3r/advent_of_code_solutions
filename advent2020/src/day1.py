@@ -21,7 +21,7 @@ def part1():
     while True:
         if start == end:
             break
-        
+
         if input[start] + input[second] == expectedAddition:
             resultList = [input[start], input[second]]
             break
