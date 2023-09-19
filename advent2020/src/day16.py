@@ -16,7 +16,11 @@ def switchToTest():
 def init(meta, tickets):
     for line in lines:
         line = line.strip()
-        if line:
+        if (
+            line
+            and line.strip() != "your ticket:"
+            and line.strip() != "nearby tickets:"
+        ):
             if line.count(",") > 0:
                 ticketsStr = line.split(",")
                 tickets.append(list(map(lambda x: int(x), ticketsStr)))
@@ -24,13 +28,42 @@ def init(meta, tickets):
             else:
                 mainSplit = line.split(":")
                 name = mainSplit[0]
-                
-                pass
+                firstSplit = mainSplit[1].strip().split("or")
+                limits = []
+                tmpSplit = firstSplit[0].strip().split("-")
+                limits += [int(tmpSplit[0]), int(tmpSplit[1])]
+                tmpSplit = firstSplit[1].strip().split("-")
+                limits += [int(tmpSplit[0]), int(tmpSplit[1])]
+                meta[name] = limits
 
-    pass
+
+def isValid(number, meta):
+    retval = False
+    for key, value in meta.items():
+        retval = (number >= value[0] and number <= value[1]) or (
+            number >= value[2] and number <= value[3]
+        )
+
+        if retval:
+            # print(key, number)
+            break
+    return retval
 
 
-def part1():
+def part1(meta, tickets):
+    init(meta, tickets)
+    invalid = []
+
+    for ticket in tickets:
+        for number in ticket:
+            if not isValid(number, meta):
+                invalid.append(number)
+                continue
+
+    print("Total:", sum(invalid))
+
+    # print(meta)
+    # print(tickets)
     pass
 
 
@@ -45,11 +78,12 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
+print()
 
 meta = {}
 tickets = []
 
 
-part1()
+part1(meta, tickets)
 part2()
