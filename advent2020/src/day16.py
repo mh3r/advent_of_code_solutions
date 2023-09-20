@@ -50,8 +50,27 @@ def isValid(number, meta):
     return retval
 
 
+def pinPointFields(metaMapping):
+    registered = []
+    while not isAllDefined(metaMapping):
+        for key, value in metaMapping.items():
+            if len(value) == 1 and value[0] not in registered:
+                registered.append(value[0])
+                for key2, value2 in metaMapping.items():
+                    if len(value2) > 1:
+                        try:
+                            value2.remove(value[0])
+                        except ValueError:
+                            pass  # do nothing!
+    return metaMapping
+
+
+def isAllDefined(metaMapping):
+    filtered = dict(filter(lambda x: len(x[1]) == 1, metaMapping.items()))
+    return len(filtered) == len(metaMapping)
+
+
 def part1(meta, tickets):
-    init(meta, tickets)
     invalid = []
 
     for ticket in tickets:
@@ -62,13 +81,48 @@ def part1(meta, tickets):
 
     print("Total:", sum(invalid))
 
+
+def part2(meta, tickets):
+    validTickets = []
+    noOfFields = len(tickets[0])
+
+    for ticket in tickets:
+        validCounter = 0
+        for number in ticket:
+            if not isValid(number, meta):
+                break
+            else:
+                validCounter += 1
+
+        if validCounter == noOfFields:
+            validTickets.append(ticket)
+
+    print("Valid Tickets:", validTickets)
+
+    noOfTickets = len(validTickets)
+    metaMapping = {}
+    for key, value in meta.items():
+        metaMapping[key] = []
+
+        for i in range(noOfFields):
+            validCounter = 0
+            for tickets in validTickets:
+                if isValid(tickets[i], {key: value}):
+                    validCounter += 1
+            if validCounter == noOfTickets:
+                metaMapping[key] += [i]
+
+    metaMapping = pinPointFields(metaMapping)
+
     # print(meta)
-    # print(tickets)
-    pass
+    print(*metaMapping.items(), sep="\n")
 
+    answerList = [1]
+    for key, value in metaMapping.items():
+        if "departure" in key:
+            answerList.append(validTickets[0][value[0]])
 
-def part2():
-    pass
+    print("Total:", reduce(lambda x, y: x * y, answerList))
 
 
 filename = "..\\data\\d16_input.txt"
@@ -83,7 +137,8 @@ print()
 
 meta = {}
 tickets = []
+init(meta, tickets)
 
 
 part1(meta, tickets)
-part2()
+part2(meta, tickets)
