@@ -7,6 +7,9 @@ import os
 import types
 import math
 
+X = "X"
+ONE = "1"
+
 
 def switchToTest():
     global filename
@@ -19,14 +22,25 @@ class Mask:
         self.mem_part2 = {}
         self.total = 0
         self.masks = []
+        # self.ones = []
+        self.exes = []
+        self.rawMask = 0
         self.maxIndex = 36
         self.isPartOne = isPartOne
 
     def updateMasks(self, mask):
         reverseMask = util.reverseString(mask)
+        mask = mask.replace(X, "0")
+        self.rawMask = int(mask, 2)
         self.masks.clear()
+        # self.ones.clear()
+        self.exes.clear()
         for index, char in enumerate(reverseMask):
             self.masks.append((index, char))
+            if char == X:
+                self.exes.append(index)
+            # if char == ONE:
+            #     self.ones.append(index)
 
     def calculate(self, memSet):
         for key in memSet:
@@ -49,27 +63,31 @@ class Mask:
 
     def calculate_v2(self, memSet):
         for key in memSet:
-            keys = []
-            binary_str = bin(int(key))[2:]
-            binLength = len(binary_str)
-            # append zeros
-            if self.maxIndex > binLength:
-                binary_str = (self.maxIndex - binLength + 1) * "0" + binary_str
+            print(self.exes)
+            print(key, self.mem[key])
+            print(self.rawMask)
 
-            binary_list = list(util.reverseString(binary_str))
-            for mask in self.masks:
-                if mask[1] == "1":
-                    binary_list[mask[0]] = "1"
-                elif mask[1] == "X":
-                    binary_list[mask[0]] = "X"
-
-            binary_str = util.reverseString("".join(binary_list))
-            print (binary_str)
-            addresses = self.exploitFloating(binary_str)
-            print(addresses)
+            appliedMask = self.rawMask | int(key)
+            addresses = self.populateMasks(appliedMask)
 
             for address in addresses:
-                self.mem_part2[str(int(address, 2))] = self.mem[key]
+                self.mem_part2[str(address)] = self.mem[key]
+
+    def populateMasks(self, appliedMask):
+        for x in self.exes:
+            if appliedMask & 2**x == 2**x:
+                appliedMask = appliedMask - 2**x
+
+        keys = set()
+        keys.add(appliedMask)
+        for x in self.exes:
+            additionalKeys = []
+            for key in keys:
+                additionalKeys.append(key)
+                additionalKeys.append(key | 2**x)
+
+            keys.update(additionalKeys)
+        return keys
 
     def exploitFloating(self, input):
         keys = set()
@@ -107,14 +125,14 @@ def part1(lines):
 
     totals = [mask.mem[key] for key in mask.mem]
 
-    print(sum(totals))
+    print("total:", sum(totals))
 
     # print(json.dumps(mask.__dict__, indent=2))
 
 
 def part2(lines):
     mask = Mask()
-    memSet = set()
+    memSet = []
 
     for line in lines:
         if "mask" in line:
@@ -126,16 +144,18 @@ def part2(lines):
             address = splitted[0].strip().replace("mem[", "").replace("]", "")
             value = int(splitted[1])
             mask.mem[address] = value
-            memSet.add(address)
+            memSet.append(address)
 
     mask.calculate_v2(memSet)
     totals = [mask.mem_part2[key] for key in mask.mem_part2]
+    # print (*mask.mem_part2, sep= "\n")
+    print(json.dumps(mask.mem_part2, indent=2))
 
-    print(sum(totals))
+    print("total:", sum(totals))
 
 
 filename = "..\\data\\d14_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -146,5 +166,6 @@ lines = list(map(lambda x: x.strip(), lines))
 
 # part1(lines)
 
-# string takes too long .. consider using bit operations 
+# string takes too long .. consider using bit operations
 part2(lines)
+# 4720233919670 too low
