@@ -88,7 +88,7 @@ def part2(lines):
 
 
 filename = "..\\data\\d10_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
