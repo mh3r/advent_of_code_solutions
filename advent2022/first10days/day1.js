@@ -5,8 +5,8 @@ function main() {
     const tmpArray = [];
     const addArray = []
 
-    const fileName = "D:/dled/advent2022/test.txt";
-    //  fileName = "D:/dled/advent2022/d1_input.txt";
+    let fileName = "D:/dled/advent2022/test.txt";
+    fileName = "advent2022/data/d1_input.txt";
 
     tools.readFileFromLocal(fileName).split(/\r?\n/).forEach(line => {
         if (line.length == 0) {
@@ -20,7 +20,6 @@ function main() {
     array.forEach(x => {
         const sum = x.reduce((partialSum, a) => partialSum + a, 0);
         addArray.push(sum);
-
     })
 
     addArray.sort((function (a, b) {
@@ -35,9 +34,6 @@ function main() {
     printJson(answer);
     printJson(sumOfTop3);
 }
-
-
-
 
 function printJson(data) {
     console.log(JSON.stringify(data, null, 2));
