@@ -6,7 +6,7 @@ import json
 import os
 import types
 import math
-
+import time
 
 def switchToTest():
     global filename
@@ -132,5 +132,16 @@ for line in lines:
 
 # print(inputMap)
 
-# part1(inputMap)
+
+start_time = time.time()
+
+part1(inputMap)
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+print("Part 1 Elapsed time: ", elapsed_time) 
 part2(lines)
+end_time = time.time()
+
+elapsed_time = end_time - start_time
+print("Part 2 Elapsed time: ", elapsed_time) 
