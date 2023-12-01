@@ -19,7 +19,6 @@ def part1(lines):
         print(line)
         numbers = re.findall(r"\d", line)
         counts.append(int(numbers[0] + numbers[-1]))
-    pass
 
     print(counts)
     ans = sum(counts)
@@ -28,8 +27,7 @@ def part1(lines):
 
 def part2(lines):
     counts = []
-    # better solution is replace word with numbers but leave first and last characters 
-    # like so 
+    # better solution is ...
     # line = line.replace("one", "o1e")
     # line = line.replace("eight", "e8t")
     
@@ -52,15 +50,12 @@ def part2(lines):
         line = line.replace("seven", "7")
         line = line.replace("eight", "8")
         line = line.replace("nine", "9")
-        print(line)
+
         numbers = re.findall(r"\d", line)
         counts.append(int(numbers[0] + numbers[-1]))
-    pass
 
     print(counts)
-    ans = sum(counts)
-    print("total ", ans)
-    pass
+    print("total ", sum(counts))
 
 
 filename = "..\\data\\d1_input.txt"#
