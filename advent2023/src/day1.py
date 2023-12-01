@@ -28,6 +28,11 @@ def part1(lines):
 
 def part2(lines):
     counts = []
+    # better solution is replace word with numbers but leave first and last characters 
+    # like so 
+    # line = line.replace("one", "o1e")
+    # line = line.replace("eight", "e8t")
+    
     for line in lines:
         line = line.replace("oneight", "18")
         line = line.replace("twone", "21")
@@ -58,7 +63,7 @@ def part2(lines):
     pass
 
 
-filename = "..\\data\\d1_input.txt"
+filename = "..\\data\\d1_input.txt"#
 # switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
