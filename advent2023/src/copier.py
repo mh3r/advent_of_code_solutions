@@ -2,14 +2,14 @@ import os
 import requests
 import creds
 
-srcPath = "advent2020/src/"
-dataPath = "advent2020/data/"
+srcPath = "advent2023/src/"
+dataPath = "advent2023/data/"
 dayXFileName = "dayx.py"
 DX_INPUT = "dx_input"
 dayNumber = len(list(filter(lambda x: "day" in x, os.listdir(srcPath))))
 newSrcName = srcPath + "day{}.py".format(dayNumber)
 newDataName = dataPath + "d{}_input.txt".format(dayNumber)
-aocUrl = "https://adventofcode.com/2020/day/" + str(dayNumber) + "/input"
+aocUrl = "https://adventofcode.com/2023/day/" + str(dayNumber) + "/input"
 
 
 def copySrc():
