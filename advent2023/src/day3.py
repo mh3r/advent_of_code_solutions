@@ -101,9 +101,7 @@ def inProximation(symbols, y, x):
     for symbolCoord in symbols:
         for coord in util.ADJ_DIRS_2:
             if symbolCoord[0] + coord[0] == x and symbolCoord[1] + coord[1] == y:
-                key = util.stringifyCoord(symbolCoord)
-                return key
-    return None
+                return util.stringifyCoord(symbolCoord)
 
 
 filename = "..\\data\\d3_input.txt"
