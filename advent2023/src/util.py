@@ -4,6 +4,7 @@
 
 # def parseToList(template, input):
 #     return list(parse.parse(template, input))
+import json
 
 
 ADJ_DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]]
@@ -18,3 +19,11 @@ def reverseString(input):
 
 def stringifyCoord(input):
     return f"{input[0]}_{input[1]}"
+
+
+def printJson(object):
+    print(json.dumps(object, indent=2))
+
+
+def printObject(object):
+    print(json.dumps(object, default=lambda x: x.__dict__, indent=2))

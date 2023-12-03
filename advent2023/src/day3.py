@@ -2,7 +2,6 @@
 from functools import reduce
 import util
 import re
-import json
 import os
 import types
 import math
@@ -34,7 +33,9 @@ def part1(symbols, lines):
                     startX = x
 
                 tmpString += lines[y][x]
-            else:
+
+            nextX = x + 1
+            if nextX == len(lines) or re.search("\d", lines[y][nextX]) is None:
                 if startX != None:
                     tmpNumber = int(tmpString)
                     print(tmpNumber)
@@ -48,20 +49,6 @@ def part1(symbols, lines):
 
                     tmpString = ""
                     startX = None
-
-        if startX != None:
-            tmpNumber = int(tmpString)
-            print(tmpNumber)
-
-            endX = startX + len(tmpString) - 1
-            if (
-                inProximation(symbols, y, startX) is not None
-                or inProximation(symbols, y, endX) is not None
-            ):
-                total += tmpNumber
-
-            tmpString = ""
-            startX = None
 
     print("answer ", total)
     assert total == 519444, "total is wrong " + str(total)
@@ -78,9 +65,10 @@ def part2(symbols, lines):
             if re.search("\d", lines[y][x]) != None:
                 if startX is None:
                     startX = x
-
                 tmpString += lines[y][x]
-            else:
+
+            nextX = x + 1
+            if nextX == len(lines) or re.search("\d", lines[y][nextX]) is None:
                 if startX != None:
                     tmpNumber = int(tmpString)
                     print(tmpNumber)
@@ -99,31 +87,13 @@ def part2(symbols, lines):
                     tmpString = ""
                     startX = None
 
-        if startX != None:
-            tmpNumber = int(tmpString)
-            print(tmpNumber)
-
-            endX = startX + len(tmpString) - 1
-            key = inProximation(symbols, y, startX)
-
-            if key is None:
-                key = inProximation(symbols, y, endX)
-
-            if key is not None:
-                if key not in pairings:
-                    pairings[key] = []
-                pairings[key].append(tmpNumber)
-
-            tmpString = ""
-            startX = None
-
-    print(pairings)
+    util.printJson(pairings)
 
     for key in pairings:
         if len(pairings[key]) > 1:
             total += pairings[key][0] * pairings[key][1]
     print("answer ", total)
-    assert total == 74528807
+    assert total == 74528807, "total is wrong " + str(total)
     pass
 
 
@@ -150,4 +120,4 @@ gears = init(lines, "^((?!\*).)*$")
 
 
 part1(symbols, lines)
-# part2(gears, lines)
+part2(gears, lines)
