@@ -14,3 +14,7 @@ ADJ_DIRS_2 = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, 1], [-1, -1], [1, -
 def reverseString(input):
     retval = input[::-1] if not None else input
     return retval
+
+
+def stringifyCoord(input):
+    return f"{input[0]}_{input[1]}"

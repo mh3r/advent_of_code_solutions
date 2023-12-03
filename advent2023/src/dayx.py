@@ -13,6 +13,14 @@ def switchToTest():
     filename = "..\\data\\test.txt"
 
 
+def init(lines):
+    retval = []
+    for line in lines:
+        pass
+
+    return retval
+
+
 def part1():
     pass
 
@@ -29,6 +37,8 @@ lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
 print(*lines, sep="\n")
+
+input = init(lines)
 
 part1()
 part2()
