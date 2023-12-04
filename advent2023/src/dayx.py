@@ -17,15 +17,15 @@ def init(lines):
     retval = []
     for line in lines:
         pass
-
+    retval = lines if len(retval) == 0 else retval
     return retval
 
 
-def part1():
+def part1(input):
     pass
 
 
-def part2():
+def part2(input):
     pass
 
 
@@ -40,5 +40,5 @@ print(*lines, sep="\n")
 
 input = init(lines)
 
-part1()
-part2()
+part1(input)
+part2(input)
