@@ -35,7 +35,7 @@ def part1(input):
         if power > -1:
             total += math.pow(2, power)
         print(game)
-    print("answer", total)
+    print("answer", int(total))
     pass
 
 
@@ -50,7 +50,7 @@ def part2(input):
         pointsByGame[str(counter)] = power
         counter += 1
 
-    print(pointsByGame)
+    print("pointsByGame", pointsByGame)
     total = 0
 
     tallies = {}
@@ -61,7 +61,7 @@ def part2(input):
         for i in range(int(key) + 1, int(key) + pointsByGame[key] + 1):
             tallies[str(i)] += tallies[key]
 
-    print(tallies)
+    print("tallies     ", tallies)
     for key in tallies:
         total += tallies[key]
     print("answer", total)
