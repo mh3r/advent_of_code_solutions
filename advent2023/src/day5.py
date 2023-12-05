@@ -18,7 +18,6 @@ def init(lines):
     global mapRules
     tmpArray = []
     mapName = None
-    print(len(lines))
     counter = 1
     for line in lines:
         if "seeds" in line:
@@ -62,6 +61,30 @@ def part1():
 
 
 def part2():
+    global seeds, mapRules
+    # was thinking of listing it out ... 
+    # seeds has 10 pairs 
+    # the code wouldnt finish 
+    # gonna try to do a bottom up approach and get the smallest range against the input 
+    moarSeeds = []
+    for i in range (seeds[0], seeds [0]  + seeds[1]):
+        moarSeeds.append(i)
+    for i in range (seeds[2], seeds [2]  + seeds[3]):
+        moarSeeds.append(i)
+    print (moarSeeds)
+    source = "seed"
+    dests = []
+    for index in seeds:
+        destination = nextDestination(source)
+        while destination is not None:
+            if destination == "fertilizer-to-water":
+                i = 4
+            index = findNewLocation(index, mapRules[destination])
+            destination = nextDestination(destination)
+            # print(index)
+        dests.append(index)
+
+    print("answer", min(dests))
     pass
 
 
@@ -72,7 +95,7 @@ def findNewLocation(index, locationList):
         start, end, theRange = location
         if index >= end and index < end + theRange:
             locationFound = location
-        # print(start, end, theRange)
+            break
     if locationFound is not None:
         start, end, theRange = locationFound
         retval = index - end + start
@@ -98,14 +121,16 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 
 seeds = []
 mapRules = {}
 init(lines)
 
-print(seeds)
-util.printJson(mapRules)
+# print(seeds)
+# util.printJson(mapRules)
 
 part1()
-part2()
+#part2()
+
+print (len(seeds))
