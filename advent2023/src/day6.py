@@ -27,9 +27,10 @@ def part1(input):
     global times
     tries = []
     for time in times:
-        tries.append(len(checkPossibleTimes(time)))
-
-    print("final answer", math.prod(tries))
+        tries.append(time + 1 - 2 * deduceFirstOccurence(time))
+    total = math.prod(tries)
+    print("final answer", total)
+    assert total == 505494, "total is wrong " + str(total)
     pass
 
 
@@ -40,30 +41,21 @@ def part2(input):
 
     # times = [71530]
     # distances = [940200]
-    tries = []
-    for time in times:
-        tries.append(checkPossibleTimes(time, True))
-
-    print("final answer", times[0] + 1 - 2 * tries[0][0])
+    time = times[0]
+    total = time + 1 - 2 * deduceFirstOccurence(time)
+    print("final answer", total)
+    assert total == 23632299, "total is wrong " + str(total)
     pass
 
 
-def checkPossibleTimes(time, isPart2 = False):
+def deduceFirstOccurence(time):
     global distances, times
-    retval = []
     distBenchmark = distances[times.index(time)]
     print("benchmark", distBenchmark)
 
     for i in range(1, time):
         if (i * (time - i)) > distBenchmark:
-            print("first one ", i)
-            retval.append(i)
-            if (isPart2):
-                break
-
-    print(retval)
-    print("ans", len(retval))
-    return retval
+            return i
 
 
 filename = "..\\data\\d6_input.txt"
