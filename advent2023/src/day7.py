@@ -25,55 +25,62 @@ def init(lines):
         retval[card] = int(value)
     retval = lines if len(retval) == 0 else retval
 
-    for hand in retval:
-        keyList = [*hand]
-        keySet = set(keyList)
-        a, b, c, d, e = keyList
-
-        print(keySet)
-        if hand.count(a) == 5:
-            categories[powers[0]].append(hand)
-            continue
-
-        if hand.count(a) == 4 or hand.count(b) == 4:
-            categories[powers[1]].append(hand)
-            continue
-
-        # full house logic ...
-        if len(keySet) == 2:
-            categories[powers[2]].append(hand)
-            continue
-
-        if len(keySet) == 3:
-            # three of a kind
-            for char in keySet:
-                if hand.count(char) == 3:
-                    categories[powers[3]].append(hand)
-                    continue
-            # two pairs
-            pairCounter = 0
-            for char in keySet:
-                if hand.count(char) == 2:
-                    pairCounter += 1
-            if pairCounter == 2:
-                categories[powers[4]].append(hand)
-                continue
-
-        if len(keySet) == 4:
-            categories[powers[5]].append(hand)
-            continue
-
-        if len(keySet) == 5:
-            categories[powers[6]].append(hand)
-            continue
-
-    for power in categories:
-        categories[power] = sorted(categories[power], key=sortingUtil )
-
     return retval
 
 
-def sortingUtil(input):
+# a better way is do do a count for each card in hand, sort them
+# and they will always be in this format
+# [5,5,5,5,5] five of a kind
+# [2,2,3,3,3] full house
+# [1,1,3,3,3] three of a kind
+def categorise(hand, isPart2=False):
+    jokersCount = hand.count(JOKER)
+
+    if jokersCount > 0:
+        hand = hand.replace(JOKER, "")
+        if len(hand) > 0:
+            cardCounter = list(map(lambda x: hand.count(x), hand))
+            hand = hand + jokersCount * hand[cardCounter.index(max(cardCounter))]
+        else:
+            hand = jokersCount * JOKER
+
+    cardList = [*hand]
+    cardSet = set(cardList)
+    a, b, c, d, e = cardList
+
+    # print(cardSet)
+    if hand.count(a) == 5:
+        return 0
+
+    if hand.count(a) == 4 or hand.count(b) == 4:
+        return 1
+
+    # full house logic ...
+    if len(cardSet) == 2:
+        return 2
+
+    if len(cardSet) == 3:
+        # three of a kind
+        for char in cardSet:
+            if hand.count(char) == 3:
+                return 3
+
+        # two pairs
+        pairCounter = 0
+        for char in cardSet:
+            if hand.count(char) == 2:
+                pairCounter += 1
+        if pairCounter == 2:
+            return 4
+
+    if len(cardSet) == 4:
+        return 5
+
+    if len(cardSet) == 5:
+        return 6
+
+
+def sortingUtil(input, isPart2=False):
     total = 0
     power = 5
     for card in input:
@@ -86,7 +93,7 @@ def sortingUtil(input):
             case "Q":
                 value = 12
             case "J":
-                value = 11
+                value = 11 if not isPart2 else 1
             case "T":
                 value = 10
             case other:
@@ -101,21 +108,53 @@ def part1(input):
     global categories, powers
     total = 0
     counter = 0
+    for hand in input:
+        category = categorise(hand)
+        categories[powers[category]].append(hand)
+
+    util.printJson(categories)
+
+    for power in categories:
+        categories[power] = sorted(categories[power], key=sortingUtil)
+
     powers.reverse()
     for power in powers:
         for hand in categories[power]:
             counter += 1
             total += counter * input[hand]
             # print (counter, input[hand])
-            huh = 1 
+            huh = 1
 
-
-    print ("answer", total)
-    # is wrong ?? 252779966  248220652 
+    print("answer", total)
+    assert 248217452 == total, "total is wrong " + str(total)
     pass
 
 
 def part2(input):
+    global categories, powers
+    total = 0
+    counter = 0
+    for hand in input:
+        category = categorise(hand, True)
+        categories[powers[category]].append(hand)
+
+    util.printJson(categories)
+
+    for power in categories:
+        categories[power] = sorted(
+            categories[power], key=lambda x: sortingUtil(x, True)
+        )
+
+    powers.reverse()
+    for power in powers:
+        for hand in categories[power]:
+            counter += 1
+            total += counter * input[hand]
+            # print (counter, input[hand])
+            huh = 1
+
+    print("answer part 2", total)
+    assert 245576185 == total, "total is wrong " + str(total)
     pass
 
 
@@ -126,21 +165,15 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 categories = {}
 powers = ["five", "four", "fullhouse", "three", "two", "one", "high"]
+JOKER = "J"
+
 
 input = init(lines)
-print(input)
-util.printJson(categories)
+# print(input)
 
 
-part1(input)
+# part1(input)
 part2(input)
-
-
-  
-
-# print ("2975A", sortingUtil("2975A"))
-# print ("2T45J", sortingUtil("2T45J"))
-# print ("29A84", sortingUtil("29A84"))

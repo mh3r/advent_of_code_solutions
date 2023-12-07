@@ -22,10 +22,16 @@ def init(lines):
 
 
 def part1(input):
+    total = 0
+    print("answer part 1", total)
+    assert 0 == total, "total is wrong " + str(total)
     pass
 
 
 def part2(input):
+    total = 0
+    print("answer part 2", total)
+    assert 0 == total, "total is wrong " + str(total)
     pass
 
 
