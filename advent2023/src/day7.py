@@ -83,6 +83,7 @@ def categorise(hand, isPart2=False):
 def sortingUtil(input, isPart2=False):
     total = 0
     power = 5
+    # "23456789TJQKA" and find index to get the value maybe a better solution 
     for card in input:
         value = 0
         match card:
