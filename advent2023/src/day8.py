@@ -133,3 +133,4 @@ print(input)
 # startingPoints = list(filter(lambda x: x[2] == "A", input))
 # print(input)
 # print(startingPoints)
+
