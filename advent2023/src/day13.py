@@ -28,37 +28,53 @@ def init(lines):
     return retval
 
 
-def potentialReflection(lava):
+def potentialReflection(lava, isPart2=False):
     retval = None
     for i in range(1, len(lava) - 1):
-        if lava[i] == lava[0]:
-            retval = findMirror(0, i, lava)
+        if lava[i] == lava[0] or (isPart2 and sameSameButDifferent(lava[i], lava[0])):
+            retval = findMirror(0, i, lava, isPart2)
             if retval:
                 break
 
-        if lava[i] == lava[-1]:
-            retval = findMirror(i, len(lava) - 1, lava)
+        if lava[i] == lava[-1] or (isPart2 and sameSameButDifferent(lava[i], lava[-1])):
+            retval = findMirror(i, len(lava) - 1, lava, isPart2)
             if retval:
                 break
 
     return retval
 
 
-def findMirror(start, end, lava):
+def sameSameButDifferent(compare1, compare2, strictTolerance=1):
+    retval = False
+    if len(compare1) == len(compare2):
+        offCounter = 0
+        for i in range(len(compare1)):
+            if offCounter > strictTolerance:
+                break
+            if compare1[i] != compare2[i]:
+                offCounter += 1
+
+        retval = offCounter == 1
+    return retval
+
+
+def findMirror(start, end, lava, isPart2=False):
     retval = None
     middle = start + (end - start) // 2
     compare1 = ""
     compare2 = ""
     for i in range(start, middle + 1):
         compare1 += lava[i]
-        # print("i:", i)
 
     for j in range(end, middle, -1):
         compare2 += lava[j]
-        # print("j:", j)
 
-    if compare1 and compare1 == compare2:
-        retval = middle + 1
+    if isPart2:
+        if compare1 and sameSameButDifferent(compare1, compare2):
+            retval = middle + 1
+    else:
+        if compare1 and compare1 == compare2:
+            retval = middle + 1
 
     return retval
 
@@ -99,13 +115,28 @@ def part1(input):
 
 def part2(input):
     answer = 0
+    verticalRefs = []
+    horizontalRefs = []
+    for lava in input:
+        reflection = potentialReflection(lava, True)
+        if reflection:
+            horizontalRefs.append(reflection)
+        else:
+            lava = rotateLava(lava)
+            reflection = potentialReflection(lava, True)
+            verticalRefs.append(reflection)
+
+    print("verticals:", verticalRefs)
+    print("horizontals:", horizontalRefs)
+
+    answer = sum(verticalRefs) + sum(horizontalRefs) * 100
     print("answer part 2", answer)
-    # assert 0 == answer, "total is wrong " + str(answer)
+    assert 31836 == answer, "total is wrong " + str(answer)
     pass
 
 
 filename = "..\\data\\d13_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
