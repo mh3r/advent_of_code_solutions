@@ -50,10 +50,10 @@ def populatePossiblePatterns(input):
 
     while pool:
         current = pool.pop()
-        brokenIndex = current.index(QUESTION)
+        questionIndex = current.index(QUESTION)
 
-        word1 = current[:brokenIndex] + BROKEN + current[brokenIndex + 1 :]
-        word2 = current[:brokenIndex] + WORKING + current[brokenIndex + 1 :]
+        word1 = current[:questionIndex] + BROKEN + current[questionIndex + 1 :]
+        word2 = current[:questionIndex] + WORKING + current[questionIndex + 1 :]
 
         if QUESTION in word1:
             pool.append(word1)
@@ -193,8 +193,8 @@ lines = list(map(lambda x: x.strip(), lines))
 
 input = init(lines)
 
-# part1(input)
-# part2(input)
+#part1(input)
+part2(input)
 
 
 # print(end)
