@@ -30,40 +30,35 @@ def init(lines):
 
 def potentialReflection(lava):
     retval = None
-    starts = []
-    stops = []
-    for i in range(len(lava) - 1):
-        for j in range(len(lava) - 1, 0, -1):
-            if lava[i] == lava[j] and i != j and j not in starts:
-                starts.append(i)
-                stops.append(j)
+    for i in range(1, len(lava) - 1):
+        if lava[i] == lava[0]:
+            retval = findMirror(0, i, lava)
+            if retval:
+                break
 
-    startsCopy = starts.copy()
-    stopsCopy = stops.copy()
+        if lava[i] == lava[-1]:
+            retval = findMirror(i, len(lava) - 1, lava)
+            if retval:
+                break
 
-    while starts and stops:
-        allRanges = list(set(starts + stops))
-        allRanges.sort()
-        minValue = min(allRanges)
-        maxValue = max(allRanges)
-        if (minValue == 0 or maxValue == len(lava) - 1) and allRanges == list(
-            range(minValue, maxValue + 1)
-        ):
-            retval = starts[-1] + 1
-        starts.pop(0)
-        stops.pop(0)
+    return retval
 
-    while startsCopy and stopsCopy:
-        allRanges = list(set(startsCopy + stopsCopy))
-        allRanges.sort()
-        minValue = min(allRanges)
-        maxValue = max(allRanges)
-        if (minValue == 0 or maxValue == len(lava) - 1) and allRanges == list(
-            range(minValue, maxValue + 1)
-        ):
-            retval = startsCopy[-1] + 1
-        startsCopy.pop()
-        stopsCopy.pop()
+
+def findMirror(start, end, lava):
+    retval = None
+    middle = start + (end - start) // 2
+    compare1 = ""
+    compare2 = ""
+    for i in range(start, middle + 1):
+        compare1 += lava[i]
+        # print("i:", i)
+
+    for j in range(end, middle, -1):
+        compare2 += lava[j]
+        # print("j:", j)
+
+    if compare1 and compare1 == compare2:
+        retval = middle + 1
 
     return retval
 
@@ -92,13 +87,13 @@ def part1(input):
             reflection = potentialReflection(lava)
             verticalRefs.append(reflection)
 
-    print(verticalRefs)
-    print(horizontalRefs)
-    
-    answer  = sum(verticalRefs) + sum(horizontalRefs) * 100
+    print("verticals:", verticalRefs)
+    print("horizontals:", horizontalRefs)
+
+    answer = sum(verticalRefs) + sum(horizontalRefs) * 100
 
     print("answer part 1", answer)
-    # assert 0 == answer, "total is wrong " + str(answer)
+    assert 33195 == answer, "total is wrong " + str(answer)
     pass
 
 
@@ -110,20 +105,15 @@ def part2(input):
 
 
 filename = "..\\data\\d13_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 
 input = init(lines)
 
-# part1(input)
+part1(input)
 part2(input)
-
-print(*input, sep="\n")
-
-
-print(potentialReflection(rotateLava(input[0])))
