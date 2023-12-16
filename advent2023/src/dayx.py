@@ -23,15 +23,19 @@ def init(lines):
 
 def part1(input):
     answer = 0
+
+    
     print("answer part 1", answer)
-    # assert 0 == answer, "total is wrong " + str(answer)
+    assert answer in [0], "total is wrong " + str(answer)
     pass
 
 
 def part2(input):
     answer = 0
+
+
     print("answer part 2", answer)
-    # assert 0 == answer, "total is wrong " + str(answer)
+    assert answer in [0], "total is wrong " + str(answer)
     pass
 
 
