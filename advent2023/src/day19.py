@@ -45,26 +45,26 @@ def init(lines):
     return rules, instructions
 
 
-def passTrough(instruction, conditions):
+def passTrough(instruction, conditions, index):
     x, m, a, s = instruction
-    condition = conditions[0]
+    condition = conditions[index]
 
     if ":" in condition:
         left, right = condition.split(":")
         if eval(left):
-            passTrough(instruction, [right])
+            passTrough(instruction, [right], 0)
         else:
-            passTrough(instruction, conditions[1:])
+            passTrough(instruction, conditions, index + 1)
     elif condition in specialKeys:
         specialKeys[condition].append(instruction)
     else:
-        passTrough(instruction, rules[condition])
+        passTrough(instruction, rules[condition], 0)
 
 
 def part1():
     answer = 0
     for instruction in instructions:
-        passTrough(instruction, rules["in"])
+        passTrough(instruction, rules["in"], 0)
 
     print(specialKeys)
     for values in specialKeys["A"]:
