@@ -21,9 +21,20 @@ def stringifyCoord(input):
     return f"{input[0]}_{input[1]}"
 
 
+def decryptCoord(input):
+    y, x = input.split("_")
+    return [int(y), int(x)]
+
+
 def printJson(object):
     print(json.dumps(object, indent=2))
 
 
 def printObject(object):
     print(json.dumps(object, default=lambda x: x.__dict__, indent=2))
+
+
+def manhattanDistance(a, b):
+    ax, ay = a
+    bx, by = b
+    return abs(ax - bx) + abs(ay - by)

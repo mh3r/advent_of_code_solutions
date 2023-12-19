@@ -46,8 +46,9 @@ def init(lines):
 
     return land, leftMirrors, rightMirrors, vertSplitter, horzSplitter
 
-
+    # lots of improvements to be made ... 
 def lightThrough(startingCoord):
+    # this should hve just included the direction from so its just one array
     fromLeft = []
     fromRight = []
     fromTop = []
@@ -87,6 +88,12 @@ def lightThrough(startingCoord):
         newX = x + x1
         while newY >= 0 and newY < len(land) and newX >= 0 and newX < len(land[0]):
             nextObstacle = land[newY][newX]
+
+            # could have checked the original direction 
+            # eg. right [0, 1] going through / [-1, 0]
+            # similarly left  [0, -1] going through / [1, 0] ie. y, x ----> -y, x 
+
+            # we could also cache the light arrays since they are constant 
             if [
                 y1,
                 x1,
