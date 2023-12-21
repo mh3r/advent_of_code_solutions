@@ -28,11 +28,9 @@ def init(lines):
         if "%" in left:
             left = left[1:]
             flipflops[left] = False
-
         elif "&" in left:
             left = left[1:]
             conjunctions[left] = []
-
         paths[left] = right.split(",")
 
     for key in conjunctions:
@@ -50,7 +48,6 @@ def process(input, cycle):
 
     while queue:
         sender, key, pulse = queue.pop(0)
-
         # print(f'{sender}    {"high" if pulse else "low" } => {key}')
         if pulse:
             highSent += 1
@@ -167,7 +164,6 @@ lines = list(map(lambda x: x.strip(), lines))
 # print(*lines, sep="\n")
 
 input = init(lines)
-
 
 part1(input)
 part2(input)
