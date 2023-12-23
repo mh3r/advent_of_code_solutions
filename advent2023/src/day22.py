@@ -1,8 +1,7 @@
 # from parse import *
 from functools import reduce
 from collections import defaultdict
-from copy import deepcopy, copy
-from itertools import product
+from copy import deepcopy
 import util
 import re
 import json
@@ -58,31 +57,30 @@ def vanishBrick(cubes, tower, undo=True):
         tower[z][x][y] = not undo
 
 
-def isBrickSupported(cubes, towerOfGod):
-    vanishBrick(cubes, towerOfGod)
+def isBrickSupported(cubes, tower):
+    vanishBrick(cubes, tower)
     for z, x, y in cubes:
-        if z - 1 < 1 or towerOfGod[z - 1][x][y]:
-            vanishBrick(cubes, towerOfGod, False)
+        if z - 1 < 1 or tower[z - 1][x][y]:
+            vanishBrick(cubes, tower, False)
             return True
 
     return False
 
 
-def freeFall(blueprints, towerOfGod, index, stop, isShortFall=False):
+def freeFall(blueprints, tower, index, stop, isShortFall=False):
     canFreeFall = True
     while canFreeFall:
         blockFell = False
         stop = min(len(blueprints), stop)
         while index < stop:
-            # print(i)
             z, cubes = blueprints[index]
-            if isBrickSupported(cubes, towerOfGod):
+            if isBrickSupported(cubes, tower):
                 index += 1
             else:
                 for coords in cubes:
                     zz, xx, yy = coords
                     coords[0] = zz - 1
-                    towerOfGod[zz - 1][xx][yy] = True
+                    tower[zz - 1][xx][yy] = True
                 blockFell = True
                 if isShortFall:
                     return True
@@ -96,7 +94,6 @@ def part1(blueprints, towerOfGod, offset):
     answer = 0
     freeFall(blueprints, towerOfGod, 0, len(blueprints))
     for i in range(len(blueprints)):
-        # print(i)
         humanTower = deepcopy(towerOfGod)
         blocks = blueprints[i][1]
         vanishBrick(blocks, humanTower)
@@ -124,7 +121,7 @@ def part2(input):
 
 
 filename = "..\\data\\d22_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
