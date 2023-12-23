@@ -68,6 +68,7 @@ def part2(symbols, lines):
                 tmpString += lines[y][x]
 
             nextX = x + 1
+            # could have used Python String isdigit() Method
             if nextX == len(lines) or re.search("\d", lines[y][nextX]) is None:
                 if startX != None:
                     tmpNumber = int(tmpString)

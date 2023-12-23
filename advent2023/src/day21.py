@@ -122,7 +122,7 @@ def part2(input):
 
 
 filename = "..\\data\\d21_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()

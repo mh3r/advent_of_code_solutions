@@ -1,5 +1,6 @@
 # from parse import *
 from functools import reduce
+from collections import defaultdict
 import util
 import re
 import json
@@ -24,7 +25,6 @@ def init(lines):
 def part1(input):
     answer = 0
 
-    
     print("answer part 1", answer)
     assert answer in [0], "total is wrong " + str(answer)
     pass
@@ -32,7 +32,6 @@ def part1(input):
 
 def part2(input):
     answer = 0
-
 
     print("answer part 2", answer)
     assert answer in [0], "total is wrong " + str(answer)
