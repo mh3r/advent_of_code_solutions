@@ -32,7 +32,8 @@ def init(lines):
     return games
 
 
-def part1(games, restriction):
+def part1(games):
+    restriction = [12, 13, 14]
     total = 0
     for game in games:
         if (
@@ -66,7 +67,6 @@ lines = list(map(lambda x: x.strip(), lines))
 # print(*lines, sep="\n")
 
 games = init(lines)
-restriction = [12, 13, 14]
 
-part1(games, restriction)
+part1(games)
 part2(games)
