@@ -57,5 +57,5 @@ lines = list(map(lambda x: x.strip(), lines))
 
 # print(*lines, sep="\n")
 
-# part1(lines)
+part1(lines)
 part2(lines)
