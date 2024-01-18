@@ -24,7 +24,7 @@ def init(lines):
             seeds = line.split(":")[1].strip().split(" ")
             counter += 1
             continue
-        if "map:" in line or counter == len(lines):
+        if "map:" in line:
             if mapName is not None:
                 mapRules[mapName] = tmpArray
                 tmpArray = []
@@ -35,6 +35,8 @@ def init(lines):
         if line.strip():
             splitted = line.split(" ")
             tmpArray.append([int(splitted[0]), int(splitted[1]), int(splitted[2])])
+        if counter == len(lines):
+            mapRules[mapName] = tmpArray
         counter += 1
     seeds = list(map(lambda x: int(x), seeds))
 
@@ -54,7 +56,10 @@ def part1():
             print(index)
         dests.append(index)
 
-    print("answer", min(dests))
+    answer = min(dests)
+
+    assert answer in [389056265, 35], f"answer is wrong {answer}"
+    print("answer", answer)
 
     # newLocation = findNewLocation(81, mapRules["soil-to-fertilizer"])
     # print(newLocation)
@@ -62,19 +67,21 @@ def part1():
 
 def part2():
     global seeds, mapRules
-    # was thinking of listing it out ... 
-    # seeds has 10 pairs 
-    # the code wouldnt finish 
-    # gonna try to do a bottom up approach and get the smallest range against the input 
+    # was thinking of listing it out ...
+    # seeds has 10 pairs
+    # the code wouldnt finish
+    # gonna try to do a bottom up approach and get the smallest range against the input
     moarSeeds = []
-    for i in range (seeds[0], seeds [0]  + seeds[1]):
-        moarSeeds.append(i)
-    for i in range (seeds[2], seeds [2]  + seeds[3]):
-        moarSeeds.append(i)
-    print (moarSeeds)
+
+    for i in range(0, len(seeds), 2):
+        print(i)
+        for j in range(seeds[i], seeds[i] + seeds[i + 1]):
+            moarSeeds.append(j)
+
+    print(moarSeeds)
     source = "seed"
     dests = []
-    for index in seeds:
+    for index in moarSeeds:
         destination = nextDestination(source)
         while destination is not None:
             if destination == "fertilizer-to-water":
@@ -88,17 +95,13 @@ def part2():
     pass
 
 
-def findNewLocation(index, locationList):
+def findNewLocation(index, mapList):
     retval = index
-    locationFound = None
-    for location in locationList:
-        start, end, theRange = location
-        if index >= end and index < end + theRange:
-            locationFound = location
-            break
-    if locationFound is not None:
-        start, end, theRange = locationFound
-        retval = index - end + start
+    for mapping in mapList:
+        dest, source, theRange = mapping
+        if index >= source and index < source + theRange:
+            dest, source, theRange = mapping
+            return index - source + dest
 
     return retval
 
@@ -115,7 +118,7 @@ def nextDestination(previousMap):
 
 
 filename = "..\\data\\d5_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -130,7 +133,26 @@ init(lines)
 # print(seeds)
 # util.printJson(mapRules)
 
-part1()
-#part2()
+# part1()
+part2()
 
-print (len(seeds))
+# print(mapRules)
+
+
+# print ("======================")
+# for key in mapRules:
+#     isAllOk = True
+#     # print(key)
+#     sortedList = sorted(mapRules[key], key=lambda x: x[1])
+#     # print(sortedList)
+
+#     for i in range(len(sortedList) - 1):
+#         _, s, r = sortedList[i]
+#         _1, s1, r1 = sortedList[i + 1]
+#         if s + r != s1:
+#             isAllOk = False
+#             break
+
+#     if not isAllOk:
+#         print(f"{key} is corrupted!!!!")
+#         isAllOk = True
