@@ -17,7 +17,6 @@ def init(lines):
     global seeds
     global mapRules
     tmpArray = []
-    mapName = None
     for counter, line in enumerate(lines):
         if "seeds" in line:
             seeds = line.split(":")[1].strip().split(" ")
@@ -39,30 +38,41 @@ def init(lines):
 
 
 def part1():
-    dests = []
+    locations = []
     for seed in seeds:
-        dests.append(locationValue(seed, 0))
-    answer = min(dests)
+        locations.append(locationValue(seed))
+    answer = min(locations)
     assert answer in [389056265, 35], f"answer is wrong {answer}"
     print("answer", answer)
 
 
 def part2():
-    global seeds, mapRules
+    locations = []
+    for i, mapRule in enumerate(mapRules):
+        for mapping in mapRule:
+            potentialSeed = seedValue(mapping[0], i)
 
-    answer = seedsCollection()
+            isQualified = False
+            for j in range(0, len(seeds), 2):
+                if (
+                    potentialSeed >= seeds[j]
+                    and potentialSeed < seeds[j] + seeds[j + 1]
+                ):
+                    isQualified = True
+                    break
 
-    # 882027676 is too high
-    # 224525111
+            if isQualified:
+                locations.append(locationValue(potentialSeed))
+
+    answer = min(locations)
     assert answer in [137516820, 46], f"answer is wrong {answer}"
 
-    
     print("answer", answer)
     pass
 
 
-def locationValue(value, index):
-    for i in range(index, len(mapRules)):
+def locationValue(value):
+    for i in range(len(mapRules)):
         mapRule = mapRules[i]
 
         for mapping in mapRule:
@@ -87,30 +97,6 @@ def seedValue(value, index):
     return value
 
 
-def seedsCollection():
-    locations = []
-
-    for i, mapRule in enumerate(mapRules):
-        for mapping in mapRule:
-            potentialSeed = seedValue(mapping[0], i)
-
-            isQualified = False
-            for j in range(0, len(seeds), 2):
-                if (
-                    potentialSeed >= seeds[j]
-                    and potentialSeed < seeds[j] + seeds[j + 1]
-                ):
-                    isQualified = True
-                    break
-
-            if isQualified:
-                locations.append(locationValue(potentialSeed, 0))
-
-    answer = min(locations)
-
-    return answer
-
-
 filename = "..\\data\\d5_input.txt"
 # switchToTest()
 
@@ -124,10 +110,5 @@ seeds = []
 mapRules = []
 init(lines)
 
-# print(seeds)
-# util.printJson(mapRules)
-
-# part1()
+part1()
 part2()
-
-# seedsCollection()
