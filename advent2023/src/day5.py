@@ -14,27 +14,20 @@ def switchToTest():
 
 
 def init(lines):
-    global seeds
-    global mapRules
-    tmpArray = []
-    for counter, line in enumerate(lines):
-        if "seeds" in line:
-            seeds = line.split(":")[1].strip().split(" ")
-            continue
-        if "map:" in line:
-            if tmpArray:
-                tmpArray.sort()
-                mapRules.append(tmpArray)
-                tmpArray = []
-            continue
-        if line.strip():
-            splitted = line.split(" ")
-            tmpArray.append([int(splitted[0]), int(splitted[1]), int(splitted[2])])
-        if counter == len(lines) - 1:
-            tmpArray.sort()
-            mapRules.append(tmpArray)
+    mapRules = []
+
+    seedLine, *blocks = lines.split("\n\n")
+    seeds = seedLine.split(":")[1].split()
+
+    for block in blocks:
+        tmpArray = []
+        _, *rules = block.split("\n")
+        for rule in rules:
+            tmpArray.append(list(map(int, rule.split())))
+        mapRules.append(tmpArray)
 
     seeds = list(map(lambda x: int(x), seeds))
+    return seeds, mapRules
 
 
 def part1():
@@ -98,17 +91,15 @@ def seedValue(value, index):
 
 
 filename = "..\\data\\d5_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
-lines = open(abs_file_path, "r").readlines()
-lines = list(map(lambda x: x.strip(), lines))
+lines = open(abs_file_path, "r").read()
+# lines = list(map(lambda x: x.strip(), lines))
 
 # print(*lines, sep="\n")
 
-seeds = []
-mapRules = []
-init(lines)
+seeds, mapRules = init(lines)
 
 part1()
 part2()
