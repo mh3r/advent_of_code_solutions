@@ -27,6 +27,7 @@ def part1(input):
     global times
     tries = []
     for time in times:
+        # its a bell curve thing
         tries.append(time + 1 - 2 * deduceFirstOccurence(time))
     total = math.prod(tries)
     print("final answer", total)
@@ -36,11 +37,10 @@ def part1(input):
 
 def part2(input):
     global distances, times
-    times = [40829166]
-    distances = [277133813491063]
 
-    # times = [71530]
-    # distances = [940200]
+    times = [int("".join(list(map(str, times))))]
+    distances = [int("".join(list(map(str, distances))))]
+
     time = times[0]
     total = time + 1 - 2 * deduceFirstOccurence(time)
     print("final answer", total)
@@ -75,3 +75,9 @@ input = init(lines)
 
 # part1(input)
 part2(input)
+
+
+# test = [40, 82, 91, 66]
+
+
+# print (test)
