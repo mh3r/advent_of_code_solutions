@@ -38,12 +38,18 @@ def part1():
     assert answer in [389056265, 35], f"answer is wrong {answer}"
     print("answer", answer)
 
-
+# kind of cheated here 
+# it comes from the realisation that the destination for each of 
+# the mapping or the lower range of input seed will always make up 
+# the smallest of destination 
+# we collect the destinations from each of the map 
+# we travel upwards to get seed number and check if thats within the valid range 
+# then we proceed as usual 
 def part2():
     locations = []
-    for i, mapRule in enumerate(mapRules):
+    for mapIndex, mapRule in enumerate(mapRules):
         for mapping in mapRule:
-            potentialSeed = seedValue(mapping[0], i)
+            potentialSeed = seedValue(mapping[0], mapIndex)
 
             isQualified = False
             for j in range(0, len(seeds), 2):
