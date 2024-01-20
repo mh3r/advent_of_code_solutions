@@ -14,13 +14,13 @@ def switchToTest():
 
 def init(lines):
     networkMap = {}
-    pattern, rest = lines.split("\n\n")
+    steps, rest = lines.split("\n\n")
 
     for line in rest.split("\n"):
         line = line.replace("(", "").replace(")", "").replace(" ", "")
         source, destination = line.split("=")
         networkMap[source] = destination.split(",")
-    return networkMap, pattern
+    return networkMap, steps
 
 
 def arrivedAtTarget(direction, current, input):
@@ -28,27 +28,25 @@ def arrivedAtTarget(direction, current, input):
     return input[current][index]
 
 
-def part1(networkMap):
+def part1(networkMap, steps):
     total = 0
     current = "AAA"
     while current != "ZZZ":
-        current = arrivedAtTarget(pattern[total % len(pattern)], current, networkMap)
+        current = arrivedAtTarget(steps[total % len(steps)], current, networkMap)
         total += 1
 
     print("answer part 1", total)
     assert 15989 == total, "total is wrong " + str(total)
 
 
-def part2(input):
-    global pattern
-
+def part2(input, steps):
     combos = []
-    startingPoints = list(filter(lambda x: x[2] == "A", input))
+    startingPoints = list(filter(lambda x: x.endswith("A"), input))
     print("starting points ", startingPoints)
     for current in startingPoints:
         total = 0
-        while current[2] != "Z":
-            current = arrivedAtTarget(pattern[total % len(pattern)], current, input)
+        while not current.endswith("Z"):
+            current = arrivedAtTarget(steps[total % len(steps)], current, input)
             total += 1
         combos.append(total)
 
@@ -68,6 +66,6 @@ lines = open(abs_file_path, "r").read()
 # print(*lines, sep="\n")
 
 
-networkMap, pattern = init(lines)
-part1(networkMap)
-part2(networkMap)
+networkMap, steps = init(lines)
+part1(networkMap, steps)
+part2(networkMap, steps)
