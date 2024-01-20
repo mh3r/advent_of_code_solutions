@@ -22,26 +22,12 @@ def init(lines):
 
 
 def findLastAddition(sequence):
-    sequenceSet = set(sequence)
-    if len(sequenceSet) == 1:
+    if len(set(sequence)) == 1:
         return sequence[0]
-    newSequence = []
+    deltas = []
     for i in range(len(sequence) - 1):
-        newSequence.append(sequence[i + 1] - sequence[i])
-    newSequence.append(sequence[-1] + findLastAddition(newSequence))
-    return newSequence[-1]
-
-
-# stupiddddddddddddddddd
-# should have just reversed the initial array
-def findPreviousAddition(sequence):
-    sequenceSet = set(sequence)
-    if len(sequenceSet) == 1:
-        return sequence[0]
-    newSequence = []
-    for i in range(len(sequence) - 1):
-        newSequence.append(sequence[i + 1] - sequence[i])
-    return sequence[0] - findPreviousAddition(newSequence)
+        deltas.append(sequence[i + 1] - sequence[i])
+    return sequence[-1] + findLastAddition(deltas)
 
 
 def part1(input):
@@ -58,9 +44,11 @@ def part1(input):
 
 def part2(input):
     answer = 0
+
     for sequence in input:
         numbers = list(map(lambda x: int(x), sequence.split(" ")))
-        answer += findPreviousAddition(numbers)
+        numbers.reverse()
+        answer += findLastAddition(numbers)
 
     print("answer part 2", answer)
     assert 1026 == answer, "total is wrong " + str(answer)
@@ -74,10 +62,9 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 
 input = init(lines)
 
 part1(input)
 part2(input)
-
