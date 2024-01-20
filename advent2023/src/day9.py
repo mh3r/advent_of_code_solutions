@@ -39,7 +39,6 @@ def part1(input):
 
     print("answer part 1", answer)
     assert 1584748274 == answer, "total is wrong " + str(answer)
-    pass
 
 
 def part2(input):
@@ -52,7 +51,6 @@ def part2(input):
 
     print("answer part 2", answer)
     assert 1026 == answer, "total is wrong " + str(answer)
-    pass
 
 
 filename = "..\\data\\d9_input.txt"
