@@ -103,7 +103,7 @@ def part1(sCoord, input):
     path = move(sCoord, input)
     answer = int(len(path) / 2)
     # print(path)
-    print(*path )
+    print(path )
 
     print("answer part 1:", answer)
     assert 6649 == answer, "total is wrong " + str(answer)
@@ -124,42 +124,42 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-symbols = ["|", "-", "L", "J", "7", "F", "."]
-newSymbols = ["┃", "━", "┗", "┛", "┓", "┏", "x"]
+# symbols = ["|", "-", "L", "J", "7", "F", "."]
+# newSymbols = ["┃", "━", "┗", "┛", "┓", "┏", "x"]
 
-newInput = []
-for line in lines:
-    for count, symbol in enumerate(symbols):
-        line = line.replace(symbols[count], newSymbols[count])
-    newInput.append(line)
+# newInput = []
+# for line in lines:
+#     for count, symbol in enumerate(symbols):
+#         line = line.replace(symbols[count], newSymbols[count])
+#     newInput.append(line)
 
 
-print(*newInput, sep="\n")
+# print(*newInput, sep="\n")
 
 input, sCoord = init(lines)
  
 # print(*input, sep="\n")
-print(sCoord)
+# print(sCoord)
 
-# part1(sCoord, input)
+part1(sCoord, input)
 # part2(input)
 
 
-path = move(sCoord, input)
+# path = move(sCoord, input)
 # lines[sCoord[1]][sCoord[0]] = "J"
 
 # below is someone elses code .... 
 # its using a method called ray casting algorithm
-start_is_vert = False
-area = 0
-for y in range(len(lines)):
-    odd_parity = False
-    for x in range(len(lines[0])):
-        if util.stringifyCoord([x, y]) in path:
-            if lines[y][x] in "|JL" or (lines[y][x] == 'S' and start_is_vert):
-                odd_parity = not odd_parity
-        else:
-            area += 1 if odd_parity else 0
+# start_is_vert = False
+# area = 0
+# for y in range(len(lines)):
+#     odd_parity = False
+#     for x in range(len(lines[0])):
+#         if util.stringifyCoord([x, y]) in path:
+#             if lines[y][x] in "|JL" or (lines[y][x] == 'S' and start_is_vert):
+#                 odd_parity = not odd_parity
+#         else:
+#             area += 1 if odd_parity else 0
 
-print(area)
+# print(area)
 
