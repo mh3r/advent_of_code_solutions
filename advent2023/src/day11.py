@@ -16,69 +16,47 @@ def switchToTest():
 
 
 def init(lines):
-    # galaxies = []
     emptyRows = []
     emptyColumns = []
-    for y, line in enumerate(lines):
-        if HASH not in line:
-            # for x, value in enumerate(line):
-            #     if value == HASH:
-            #         galaxies.append([x, y])
-            # else:
-            emptyRows.append(y)
+    galaxies = []
 
-    for x, value in enumerate(lines[0]):
+    for x in range(len(lines[0])):
         verticalSlice = []
         for y, line in enumerate(lines):
             verticalSlice.append(line[x])
         if HASH not in verticalSlice:
             emptyColumns.append(x)
 
-    return emptyRows, emptyColumns
-
-
-# not actually necessary ...
-def expand(input, emptyRows, emptyColumns):
-    newMap = input.copy()
-
-    for i, row in enumerate(emptyRows):
-        newIndex = row + i
-        newMap.insert(newIndex, input[row])
-
-    for i, column in enumerate(emptyColumns):
-        newIndex = column + i
-        for i, row in enumerate(newMap):
-            row = row[:newIndex] + "." + row[newIndex:]
-            newMap[i] = row
-
-    return newMap
-
-
-def part1(lines, emptyRows, emptyColumns):
-    expanded = expand(lines, emptyRows, emptyColumns)
-
-    galaxies = []
-    for y, line in enumerate(expanded):
+    for y, line in enumerate(lines):
         if HASH in line:
             for x, value in enumerate(line):
                 if value == HASH:
                     galaxies.append([x, y])
+        else:
+            emptyRows.append(y)
 
-    answer = 0
+    return galaxies, emptyRows, emptyColumns
+
+
+def calculateDistancesWithExpansion(galaxies, emptyRows, emptyColumns, expansionFactor):
     galaxyLength = len(galaxies)
-    for i in range(len(galaxies)):
-        for j in range(i + 1, len(galaxies)):
-            answer += manhattanDistance(galaxies[i], galaxies[j])
+    answer = 0
+    for i in range(galaxyLength):
+        for j in range(i + 1, galaxyLength):
+            sourceCoord = galaxies[i]
+            destCoord = galaxies[j]
+            answer += measureDistance(
+                sourceCoord, destCoord, emptyRows, emptyColumns, expansionFactor
+            )
+    return answer
 
-    print("answer part 1", answer)
-    assert 10289334 == answer, "total is wrong " + str(answer)
-    pass
 
-
-def additionalDistance(a, b, emptyRows, emptyColumns, expansionFactor=1):
+def measureDistance(a, b, emptyRows, emptyColumns, expansionFactor):
     retval = 0
     ax, ay = a
     bx, by = b
+    # manhattan distance
+    retval += abs(ax - bx) + abs(ay - by)
 
     for column in emptyColumns:
         if min(ax, bx) < column and max(ax, bx) > column:
@@ -91,33 +69,24 @@ def additionalDistance(a, b, emptyRows, emptyColumns, expansionFactor=1):
     return retval
 
 
-def part2(lines, emptyRows, emptyColumns):
-    galaxies = []
-    for y, line in enumerate(lines):
-        if HASH in line:
-            for x, value in enumerate(line):
-                if value == HASH:
-                    galaxies.append([x, y])
+def part1(galaxies, emptyRows, emptyColumns):
+    expansionFactor = 2 - 1
+    answer = calculateDistancesWithExpansion(
+        galaxies, emptyRows, emptyColumns, expansionFactor
+    )
 
-    answer = 0
-    galaxyLength = len(galaxies)
-    for i in range(len(galaxies)):
-        for j in range(i + 1, len(galaxies)):
-            sourceCoord = galaxies[i]
-            destCoord = galaxies[j]
-            answer += manhattanDistance(sourceCoord, destCoord)
-            answer += additionalDistance(
-                sourceCoord, destCoord, emptyRows, emptyColumns, 1000000 - 1
-            )
-    print("answer part 2", answer)
-    assert 649862989626 == answer, "total is wrong " + str(answer)
+    print("Answer part 1:", answer)
+    assert answer in [10289334], "total is wrong " + str(answer)
     pass
 
 
-def manhattanDistance(a, b):
-    ax, ay = a
-    bx, by = b
-    return abs(ax - bx) + abs(ay - by)
+def part2(galaxies, emptyRows, emptyColumns):
+    expansionFactor = 1000000 - 1
+    answer = calculateDistancesWithExpansion(
+        galaxies, emptyRows, emptyColumns, expansionFactor
+    )
+    print("Answer part 2:", answer)
+    assert answer in [649862989626], "total is wrong " + str(answer)
 
 
 filename = "..\\data\\d11_input.txt"
@@ -127,11 +96,11 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 
-emptyRows, emptyColumns = init(lines)
-print(emptyRows)
-print(emptyColumns)
+galaxies, emptyRows, emptyColumns = init(lines)
+print("Empty rows:\t", emptyRows)
+print("Empty columns:\t", emptyColumns)
 
-part1(lines, emptyRows, emptyColumns)
-part2(lines, emptyRows, emptyColumns)
+part1(galaxies, emptyRows, emptyColumns)
+part2(galaxies, emptyRows, emptyColumns)

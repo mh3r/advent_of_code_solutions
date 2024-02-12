@@ -92,51 +92,40 @@ def traversePipe(sCoord, theMap):
     return path
 
 
-def part1(sCoord, theMap):
-    path = traversePipe(sCoord, theMap)
+def part1(path):
 
     answer = int(len(path) / 2)
     print("answer part 1:", answer)
     assert answer in [6649, 8, 0], "total is wrong " + str(answer)
-    pass
 
 
-def part2(sCoord, theMap):
-    path = traversePipe(sCoord, theMap)
-    
-    for y in range(len(theMap)):
-        for x, character in enumerate(theMap[y]):
-            print(y, x, character)
-            break
-
-            pass
-
+# ray casting algorithm
+def part2(path, theMap):
     answer = 0
+    for y in range(len(theMap)):
+        parity = False
+        for x, character in enumerate(theMap[y]):
+            if (y, x) in path:
+                if character in "|JL":
+                    parity = not parity
+            else:
+                if parity:
+                    answer += 1
+
     print("answer part 2:", answer)
-    assert 0 == answer, "total is wrong " + str(answer)
-    pass
+    assert answer in [601, 10], "total is wrong " + str(answer)
 
 
 filename = "..\\data\\d10_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-# symbols = ["|", "-", "L", "J", "7", "F", "."]
-# newSymbols = ["┃", "━", "┗", "┛", "┓", "┏", "x"]
-
-# newInput = []
-# for line in lines:
-#     for count, symbol in enumerate(symbols):
-#         line = line.replace(symbols[count], newSymbols[count])
-#     newInput.append(line)
-
-
-# print(*newInput, sep="\n")
-
 input, sCoord = init(lines)
 
-# part1(sCoord, input)
-part2(sCoord, input)
+path = traversePipe(sCoord, input)
+
+part1(path)
+part2(path, input)
