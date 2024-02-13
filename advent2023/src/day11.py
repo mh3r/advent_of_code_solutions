@@ -31,7 +31,7 @@ def init(lines):
         if HASH in line:
             for x, value in enumerate(line):
                 if value == HASH:
-                    galaxies.append([x, y])
+                    galaxies.append((y, x))
         else:
             emptyRows.append(y)
 
@@ -51,10 +51,10 @@ def calculateDistancesWithExpansion(galaxies, emptyRows, emptyColumns, expansion
     return answer
 
 
-def measureDistance(a, b, emptyRows, emptyColumns, expansionFactor):
+def measureDistance(src, dest, emptyRows, emptyColumns, expansionFactor):
     retval = 0
-    ax, ay = a
-    bx, by = b
+    ay, ax = src
+    by, bx = dest
     # manhattan distance
     retval += abs(ax - bx) + abs(ay - by)
 
