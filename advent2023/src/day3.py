@@ -120,3 +120,4 @@ gears = init(lines, "^((?!\*).)*$")
 
 part1(symbols, lines)
 part2(gears, lines)
+
