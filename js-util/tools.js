@@ -1,5 +1,6 @@
 import { readFile, readFileSync } from 'fs';
 
+export const DIRS = "UDRL".split('');
 export const ADJ_DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]];
 export const ADJ_DIRS_2 = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, 1], [-1, -1], [1, -1]];
 
@@ -59,6 +60,11 @@ export function unbindArray(string) {
 }
 //  let [y, x] = tools.unbindArray(bind);
 
+export function manhattanDistance(coord1, coord2) {
+    const [x1, y1] = coord1
+    const [x2, y2] = coord2
+    return Math.abs(y2 - y1) + Math.abs(x2 - x1)
+}
 
 
 let debug = 1;
