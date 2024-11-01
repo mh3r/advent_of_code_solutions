@@ -14,8 +14,8 @@ export function printJson(data) {
     console.log(JSON.stringify(data, null, 2));
 }
 
-export function cprint(data) {
-    console.log(data);
+export function cprint(...data) {
+    console.log(...data);
 }
 
 export function printBoard(array) {
