@@ -9,15 +9,17 @@ const STATE_ADD = 1
 const STATE_MULT = 2
 const STATE_INPUT = 3
 const STATE_OUTPUT = 4
+const PARAM_ADDR = 0
+const PARAM_VALUE = 1
 
 const END_STATE = 99
 
 
-function part1(input) {
+function part1(intProgram) {
     let answer;
+    let input = 1;
 
-
-    answer = runIntcode(input, 12, 2)
+    answer = runIntcode(input, intProgram, 12, 2)
 
 
     console.log(`Part 1: ${answer}`)
@@ -32,40 +34,32 @@ function part2(input) {
 
     const expectedOutput = 19690720
 
-    loop1:
-    for (let noun = 99; noun >= 0; noun--) {
-        for (let verb = 99; verb >= 0; verb--) {
-
-            const output = runIntcode(input.slice(), noun, verb)
-            console.log(output)
-            if (expectedOutput === output) {
-                answer = 100 * noun + verb
-                break loop1
-            }
-        }
-    }
+ 
     console.log(`Part 2: ${answer}`)
 
     const finalAnswer = 8298
     console.assert(finalAnswer === answer, `${answer} should have been ${finalAnswer}`);
 }
 
-function runIntcode(input, noun, verb) {
-    input[1] = noun
-    input[2] = verb
+function runIntcode(input, intProgram, noun, verb) {
+    input = input
+    output = 0
 
-    for (let i = 0; i < input.length; i += 4) {
-        const opcode = input[i]
-        const addr1 = input[i + 1]
-        const addr2 = input[i + 2]
-        const dest = input[i + 3]
+    intProgram[1] = noun
+    intProgram[2] = verb
 
-        if (END_STATE === opcode) return input[0]
+    for (let i = 0; i < intProgram.length; i += 4) {
+        const opcode = intProgram[i]
+        const addr1 = intProgram[i + 1]
+        const addr2 = intProgram[i + 2]
+        const dest = intProgram[i + 3]
 
-        input[dest] = eval((input[addr1] + (opcode === STATE_ADD ? "+" : "*") + input[addr2]))
+        if (END_STATE === opcode) return intProgram[0]
+
+        intProgram[dest] = eval((intProgram[addr1] + (opcode === STATE_ADD ? "+" : "*") + intProgram[addr2]))
     }
 
-    return input[0]
+    return intProgram[0]
 }
 
 function main() {
