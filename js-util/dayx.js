@@ -6,15 +6,17 @@ const dataDir = `${baseDir}\\data`;
 
 function part1(lines) {
     let answer = 0;
-    console.log(`Part 1: ${answer}`)
     const finalAnswer = undefined
+
+    console.log(`Part 1: ${answer}`)
     console.assert(finalAnswer === answer, `${answer} should have been ${finalAnswer}`);
 }
 
 function part2(lines) {
     let answer = 0;
-    console.log(`Part 2: ${answer}`)
     const finalAnswer = undefined
+    
+    console.log(`Part 2: ${answer}`)
     console.assert(finalAnswer === answer, `${answer} should have been ${finalAnswer}`);
 }
 
