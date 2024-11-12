@@ -21,34 +21,25 @@ const MODE_VALUE = 1
 function part1(intProgram) {
     let answer;
     let input = 1;
+    const finalAnswer = 11933517
 
     answer = runIntcode(input, intProgram)
-
     console.log(`Part 1: ${answer}`)
-    const finalAnswer = 11933517
     console.assert(finalAnswer === answer, `${answer} should have been ${finalAnswer}`);
-
-
 }
 
 function part2(intProgram) {
     let answer;
+    const finalAnswer = 10428568
 
-    const expectedOutput = 19690720
+    // for some reason the sample example didnt work?
+    // 3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+    // 1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+    // 999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99
 
     let input = 5
-
-    input = 5
-    intProgram = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
-        1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,
-        999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
-
     answer = runIntcode(input, intProgram)
-
-
     console.log(`Part 2: ${answer}`)
-
-    const finalAnswer = 8298
     console.assert(finalAnswer === answer, `${answer} should have been ${finalAnswer}`);
 }
 
@@ -68,7 +59,7 @@ function runIntcode(input, intProgram) {
             case STATE_MULT:
                 paramValue_1 = getParameterValue(opcode, instruction, intProgram, index)
                 paramValue_2 = getParameterValue(opcode, instruction, intProgram, index, 1)
-                paramValue_3 = intProgram [index + 3]
+                paramValue_3 = intProgram[index + 3]
                 intProgram[paramValue_3] = eval((paramValue_1 + (instruction === STATE_ADD ? "+" : "*") + paramValue_2))
                 index += 4
                 break
@@ -90,7 +81,6 @@ function runIntcode(input, intProgram) {
                 } else {
                     index += 3
                 }
-
                 break
             case STATE_JIF:
                 paramValue_1 = getParameterValue(opcode, instruction, intProgram, index)
@@ -104,7 +94,7 @@ function runIntcode(input, intProgram) {
             case STATE_LESS_THAN:
                 paramValue_1 = getParameterValue(opcode, instruction, intProgram, index)
                 paramValue_2 = getParameterValue(opcode, instruction, intProgram, index, 1)
-                paramValue_3 = intProgram [index + 3]
+                paramValue_3 = intProgram[index + 3]
                 const lessThanValue = paramValue_1 < paramValue_2 ? 1 : 0
                 intProgram[paramValue_3] = lessThanValue
                 index += 4
@@ -112,7 +102,7 @@ function runIntcode(input, intProgram) {
             case STATE_EQUAL:
                 paramValue_1 = getParameterValue(opcode, instruction, intProgram, index)
                 paramValue_2 = getParameterValue(opcode, instruction, intProgram, index, 1)
-                paramValue_3 = intProgram [index + 3]
+                paramValue_3 = intProgram[index + 3]
                 const equalValue = paramValue_1 === paramValue_2 ? 1 : 0
                 intProgram[paramValue_3] = equalValue
                 index += 4
@@ -123,7 +113,7 @@ function runIntcode(input, intProgram) {
     return output
 }
 
-function getParameterValue(opcode, instruction, intProgram, index, offset = 0) {   
+function getParameterValue(opcode, instruction, intProgram, index, offset = 0) {
     const isRaw = getPositionValue(opcode - instruction, 3 + offset) === MODE_VALUE
     const retval = isRaw ? intProgram[index + 1 + offset] : intProgram[intProgram[index + 1 + offset]]
     return retval
