@@ -2,14 +2,30 @@ import os
 import requests
 import creds
 
-srcPath = "advent2023/src/"
-dataPath = "advent2023/data/"
+YEAR = 2018
+srcPath = "advent{}/src/".format(YEAR)
+dataPath = "advent{}/data/".format(YEAR)
 dayXFileName = "dayx.py"
 DX_INPUT = "dx_input"
-dayNumber = len(list(filter(lambda x: "day" in x, os.listdir(srcPath))))
-newSrcName = srcPath + "day{}.py".format(dayNumber)
-newDataName = dataPath + "d{}_input.txt".format(dayNumber)
-aocUrl = "https://adventofcode.com/2023/day/" + str(dayNumber) + "/input"
+cwd = os.getcwd()
+
+dayNumber, newSrcName, newDataName, aocUrl = [None, None, None, None]
+
+abs_file_path = os.path.join(os.path.dirname(__file__), dayXFileName)
+
+def init():
+    global dayNumber, newSrcName, newDataName, aocUrl
+    if not os.path.exists(srcPath):
+        os.makedirs(srcPath)
+
+    if not os.path.exists(dataPath):
+        os.makedirs(dataPath)
+        open(dataPath + "test.txt", 'a').close()
+
+    dayNumber = len(list(filter(lambda x: "day" in x, os.listdir(srcPath)))) + 1
+    newSrcName = srcPath + "day{}.py".format(dayNumber)
+    newDataName = dataPath + "d{}_input.txt".format(dayNumber)
+    aocUrl = "https://adventofcode.com/{}/day/{}/input".format(YEAR, dayNumber)
 
 
 def copySrc():
@@ -38,6 +54,7 @@ def downloadInputFile():
     print("Created: " + newDataName)
 
 
+init()
 copySrc()
 downloadInputFile()
 

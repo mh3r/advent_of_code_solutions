@@ -1,12 +1,14 @@
 # from parse import *
 from functools import reduce
 from collections import defaultdict
-import util
+import sys
 import re
 import json
 import os
 import types
 import math
+sys.path.append(os.getcwd() + "\py-util")
+import util
 
 
 def switchToTest():
