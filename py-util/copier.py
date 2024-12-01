@@ -46,7 +46,7 @@ def copySrc():
 
 def downloadInputFile():
     request = requests.get(
-        aocUrl, allow_redirects=True, headers={"cookie": creds.COOKIE}
+        aocUrl, allow_redirects=True, headers={"cookie": creds.COOKIE} , verify=False
     )
 
     with open(newDataName, "wb") as file:
