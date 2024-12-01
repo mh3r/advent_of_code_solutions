@@ -2,7 +2,7 @@ import os
 import requests
 import creds
 
-YEAR = 2018
+YEAR = 2024
 srcPath = "advent{}/src/".format(YEAR)
 dataPath = "advent{}/data/".format(YEAR)
 dayXFileName = "dayx.py"
