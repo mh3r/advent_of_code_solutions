@@ -25,7 +25,7 @@ def init(lines):
     return retval
 
 
-def part1(input):
+def part1():
     answer = 0
 
     for list in listing:
@@ -36,7 +36,20 @@ def part1(input):
     pass
 
 
-def isSafe(input):
+def part2():
+    answer = 0
+
+    for list in listing:
+        answer += isLooselySafe(list)
+
+    print("answer part 2", answer)
+    assert answer in [459], "answer is wrong " + str(answer)
+    pass
+
+
+# this was first attempt
+# trying to jump and use 123081203 diff methods instead of having a plan
+def isSafe_unused(input):
 
     stringifiedInput = "_".join(list(map(str, input)))
     listSorted = input[:]
@@ -61,6 +74,20 @@ def isSafe(input):
     return 1
 
 
+def isSafe(input):
+    # we rely on the first pair to determine sign 
+    if input[0] < input[1]:
+        input.reverse()
+        
+
+    safeRange = list(range(1, 4))
+
+    for i in range(len(input) - 1):
+        if input[i] - input[i + 1] not in safeRange:
+            return 0
+    return 1
+
+
 def isLooselySafe(input):
 
     if isSafe(input) == 1:
@@ -76,17 +103,6 @@ def isLooselySafe(input):
             return 1
 
     return 0
-
-
-def part2(input):
-    answer = 0
-
-    for list in listing:
-        answer += isLooselySafe(list)
-
-    print("answer part 2", answer)
-    assert answer in [459], "answer is wrong " + str(answer)
-    pass
 
 
 filename = "..\\data\\d2_input.txt"
@@ -106,5 +122,6 @@ for line in lines:
     listing.append(list(map(int, splitted)))
 
 
-part1(listing[:])
-part2(listing[:])
+safeRange = list(range(1, 4))
+part1()
+part2()

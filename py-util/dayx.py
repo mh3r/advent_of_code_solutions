@@ -7,12 +7,14 @@ import json
 import os
 import types
 import math
+
 sys.path.append(os.getcwd() + "\py-util")
 import util
 
 
 def switchToTest():
     global filename
+    print ("Testing ... ")
     filename = "..\\data\\test.txt"
 
 
@@ -24,7 +26,7 @@ def init(lines):
     return retval
 
 
-def part1(input):
+def part1():
     answer = 0
 
     print("answer part 1", answer)
@@ -32,7 +34,7 @@ def part1(input):
     pass
 
 
-def part2(input):
+def part2():
     answer = 0
 
     print("answer part 2", answer)
@@ -51,5 +53,5 @@ lines = list(map(lambda x: x.strip(), lines))
 
 input = init(lines)
 
-part1(input[:])
-part2(input[:])
+part1()
+part2()
