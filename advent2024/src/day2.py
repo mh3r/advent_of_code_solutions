@@ -75,10 +75,9 @@ def isSafe_unused(input):
 
 
 def isSafe(input):
-    # we rely on the first pair to determine sign 
+    # we rely on the first pair to determine sign
     if input[0] < input[1]:
         input.reverse()
-        
 
     safeRange = list(range(1, 4))
 
@@ -97,9 +96,7 @@ def isLooselySafe(input):
         newList = input[:]
         del newList[i]
 
-        retval = isSafe(newList)
-
-        if retval == 1:
+        if isSafe(newList):
             return 1
 
     return 0
