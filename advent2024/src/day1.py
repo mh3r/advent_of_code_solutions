@@ -14,6 +14,7 @@ import util
 
 def switchToTest():
     global filename
+    print("Testing ... ")
     filename = "..\\data\\test.txt"
 
 
@@ -25,33 +26,34 @@ def init(lines):
     return retval
 
 
-def part1(list1, list2):
+def part1():
     answer = 0
-    list1.sort()
-    list2.sort()
+    leftList.sort()
+    rightList.sort()
 
-    for i in range(len(list1)):
-        answer += abs(list1[i] - list2[i])
+    for i in range(len(leftList)):
+        answer += abs(leftList[i] - rightList[i])
 
     print("answer part 1", answer)
-    assert answer in [1830467], "total is wrong " + str(answer)
+    assert answer in [10, 1830467], "total is wrong " + str(answer)
     pass
 
-def part2(list1, list2):
+
+def part2():
     answer = 0
 
-    for i in range(len(list1)):
-        first = list1[i]
-        multiplier = list2.count(first)
+    for i in range(len(leftList)):
+        first = leftList[i]
+        multiplier = rightList.count(first)
         answer += first * multiplier
 
     print("answer part 2", answer)
-    assert answer in [26674158], "total is wrong " + str(answer)
+    assert answer in [7, 26674158], "total is wrong " + str(answer)
     pass
 
 
 filename = "..\\data\\d1_input.txt"
-# switchToTest()
+switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -61,13 +63,13 @@ lines = list(map(lambda x: x.strip(), lines))
 
 input = init(lines)
 
-list1 = []
-list2 = []
+leftList = []
+rightList = []
 
 for line in lines:
     splitted = line.split()
-    list1.append(int(splitted[0]))
-    list2.append(int(splitted[1]))
+    leftList.append(int(splitted[0]))
+    rightList.append(int(splitted[1]))
 
-part1(list1[:], list2[:])
-part2(list1[:], list2[:])
+part1()
+part2()
