@@ -102,9 +102,8 @@ input = init(lines)
 
 listing = []
 for line in lines:
-    splitted = line.split(" ")
+    splitted = line.split()
     listing.append(list(map(int, splitted)))
-
 
 part1(listing[:])
 part2(listing[:])
