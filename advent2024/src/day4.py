@@ -33,9 +33,11 @@ def part1():
         for x in range(len(grid[0])):
             character = grid[y][x]
             if character == "X":
-                print (y, x)
-                answer += getXmasPathRecur(y, x, 1, [[y, x]])
+                answer += checkXmas(y, x)
+            
 
+#   2401 ???
+ 
     print("answer part 1", answer)
     assert answer in [18, 0], "answer is wrong " + str(answer)
     pass
@@ -49,37 +51,32 @@ def part2():
     pass
 
 
-# def getXmasPath(y, x):
-    # getXmasPathRecur 
-
-def getXmasPathRecur(y, x, charIndex, path):
-    if len(path) == len(XMAS):
-        print (path)
-        return 1
-    if len(XMAS) == charIndex:
-        return 0
-    for coords in getNextCoords (y, x, XMAS[charIndex]):
-        pathCopy = path[:]
-        pathCopy.append(coords)
-        return getXmasPathRecur(coords[0], coords[1], charIndex + 1, pathCopy)
-
-
-
-def getNextCoords(y, x, character):
-    retval = []
+def checkXmas(y, x):
+    retval = 0
+    # print ("---------------" ,y , x)
     for dx, dy in util.ADJ_DIRS_2:
-        tmpY = y + dy
-        tmpX = x + dx
 
-        if tmpY not in range(len(grid)) or tmpX not in range(len(grid[0])):
+        if y + len(MAS) * dy not in range(len(grid)) or x + len(MAS) * dx not in range(
+            len(grid[0])
+        ):
             continue
 
-        if grid[tmpY][tmpX] == character:
-            retval.append([tmpY, tmpX])
-    return retval
+        tmpY = y
+        tmpX = x
+        for letter in MAS:
+            tmpY += dy
+            tmpX += dx
+            if grid[tmpY][tmpX] != letter:
+                break
+            
+            if letter == MAS[-1]:
+                # print ("THE LAST COORD", tmpY, tmpX)
+                retval += 1
+    return retval                
+
 
 filename = "..\\data\\d4_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -93,9 +90,9 @@ grid = []
 for line in lines:
     grid.append(list(line))
 
-XMAS = list("XMAS")
+MAS = list("MAS")
 
-print(grid)
+# print(grid)
 
 part1()
 part2()
