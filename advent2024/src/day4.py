@@ -21,7 +21,7 @@ def switchToTest():
 def init(lines):
     retval = []
     for line in lines:
-        pass
+        retval.append(list(line))
     retval = lines if len(retval) == 0 else retval
     return retval
 
@@ -29,25 +29,28 @@ def init(lines):
 def part1():
     answer = 0
 
-    for y in range(len(grid)):
-        for x in range(len(grid[0])):
-            character = grid[y][x]
+    for y in range(len(input)):
+        for x in range(len(input[0])):
+            character = input[y][x]
             if character == "X":
                 answer += checkXmas(y, x)
-            
 
-#   2401 ???
- 
     print("answer part 1", answer)
-    assert answer in [18, 0], "answer is wrong " + str(answer)
+    assert answer in [18, 2401], "answer is wrong " + str(answer)
     pass
 
 
 def part2():
     answer = 0
 
+    for y in range(len(input)):
+        for x in range(len(input[0])):
+            character = input[y][x]
+            if character == "A":
+                answer += checkCrossMas(y, x)
+
     print("answer part 2", answer)
-    assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [9, 1822], "answer is wrong " + str(answer)
     pass
 
 
@@ -55,10 +58,10 @@ def checkXmas(y, x):
     retval = 0
     # print ("---------------" ,y , x)
     for dx, dy in util.ADJ_DIRS_2:
-
-        if y + len(MAS) * dy not in range(len(grid)) or x + len(MAS) * dx not in range(
-            len(grid[0])
-        ):
+        masLength = len(MAS)
+        if y + masLength * dy not in range(
+            len(input)
+        ) or x + masLength * dx not in range(len(input[0])):
             continue
 
         tmpY = y
@@ -66,13 +69,37 @@ def checkXmas(y, x):
         for letter in MAS:
             tmpY += dy
             tmpX += dx
-            if grid[tmpY][tmpX] != letter:
+            if input[tmpY][tmpX] != letter:
                 break
-            
+
             if letter == MAS[-1]:
-                # print ("THE LAST COORD", tmpY, tmpX)
                 retval += 1
-    return retval                
+    return retval
+
+
+def checkCrossMas(y, x):
+    if (
+        y + 1 not in range(len(input))
+        or y - 1 not in range(len(input))
+        or x + 1 not in range(len(input[0]))
+        or x - 1 not in range(len(input[0]))
+    ):
+        return 0
+
+    topLeft = input[y - 1][x - 1]
+    topRight = input[y - 1][x + 1]
+    bottomLeft = input[y + 1][x - 1]
+    bottomRight = input[y + 1][x + 1]
+
+    clockWise = [topLeft, topRight, bottomRight, bottomLeft]
+
+    if clockWise.count("M") != 2 or clockWise.count("S") != 2:
+        return 0
+
+    if topLeft == topRight or topLeft == bottomLeft:
+        return 1
+
+    return 0
 
 
 filename = "..\\data\\d4_input.txt"
@@ -82,17 +109,11 @@ abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
 lines = list(map(lambda x: x.strip(), lines))
 
-print(*lines, sep="\n")
+# print(*lines, sep="\n")
 
 input = init(lines)
 
-grid = []
-for line in lines:
-    grid.append(list(line))
-
 MAS = list("MAS")
-
-# print(grid)
 
 part1()
 part2()
