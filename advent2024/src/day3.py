@@ -28,15 +28,10 @@ def init(lines):
 
 def part1():
     answer = 0
-    pattern = r"mul\((\d+),(\d+)\)"
-    grouping = re.findall(pattern, input[0])
+    mulMatches = re.findall(mulPattern, input)
 
-    print(grouping)
-
-    for group in grouping:
-        first = int(group[0])
-        second = int(group[1])
-        answer += first * second
+    for match in mulMatches:
+        answer += int(match[0]) * int(match[1])
     print("answer part 1", answer)
     assert answer in [161, 155955228], "answer is wrong " + str(answer)
     pass
@@ -44,53 +39,22 @@ def part1():
 
 def part2():
     answer = 0
+    grouping = re.finditer(anyPattern, input)
 
-    pattern = r"mul\((\d+),(\d+)\)"
-    grouping = re.finditer(pattern, input[0])
+    isOperate = True
+    for match in grouping:
+        action = match.group()
 
-    numbers = []
-    for group in grouping:
-        numbers.append([group.start(), group.group()])
-
-    # print(numbers)
-
-    doPattern = r"(do\(\))"
-    dontPattern = r"(don't\(\))"
-    doMatches = re.finditer(doPattern, input[0])
-    dontMatches = re.finditer(dontPattern, input[0])
-
-    doInstructions = [0]
-
-    for do in doMatches:
-        doInstructions.append(do.start())
-
-    dontInstructions = [0]
-
-    for dont in dontMatches:
-        dontInstructions.append(dont.start())
-
-    for possibleMul in numbers:
-        pos = possibleMul[0]
-
-        # print (first)
-        # print (second)
-
-        lastDoInstruction = list(filter(lambda x: x < pos, doInstructions))[-1]
-
-        lastDontInstruction = list(filter(lambda x: x < pos, dontInstructions))[-1]
-        # print("--------------")
-        # print(lastDoInstruction)
-        # print(lastDontInstruction)
-
-        if lastDoInstruction >= lastDontInstruction:
-            theValue = possibleMul[1].replace("mul(", "").replace(")", "")
+        if "don" in action:
+            isOperate = False
+        elif "do" in action:
+            isOperate = True
+        elif isOperate:
+            theValue = action.replace("mul(", "").replace(")", "")
             splitted = theValue.split(",")
             first = int(splitted[0])
             second = int(splitted[1])
             answer += first * second
-
-    # print(doInstructions)
-    # print(dontInstructions)
 
     print("answer part 2", answer)
     assert answer in [48, 100189366], "answer is wrong " + str(answer)
@@ -107,14 +71,10 @@ lines = list(map(lambda x: x.strip(), lines))
 # print(*lines, sep="\n")
 
 input = init(lines)
+input = "".join(input)
 
+mulPattern = r"mul\((\d+),(\d+)\)"
+anyPattern = r"(mul\(\d+,\d+\))|(do\(\))|(don't\(\))"
 
-'''
-TODO 
-clean up 
-had to modify input so that its one line 
-
-
-'''
 part1()
 part2()

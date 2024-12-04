@@ -29,7 +29,7 @@ def init(lines):
 def part1():
     answer = 0
 
-    print("answer part 1", answer)
+    print("answer part 1:", answer)
     assert answer in [0, 0], "answer is wrong " + str(answer)
     pass
 
@@ -37,7 +37,7 @@ def part1():
 def part2():
     answer = 0
 
-    print("answer part 2", answer)
+    print("answer part 2:", answer)
     assert answer in [0, 0], "answer is wrong " + str(answer)
     pass
 
