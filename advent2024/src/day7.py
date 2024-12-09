@@ -30,9 +30,8 @@ def init(lines):
 
 def part1():
     answer = 0
-
     for equation in input:
-        if determineValidEquation(equation, operations):
+        if determineValidEquation(equation):
             answer += equation[0]
     print("answer part 1:", answer)
     assert answer in [3749, 5512534574980], "answer is wrong " + str(answer)
@@ -42,37 +41,40 @@ def part1():
 def part2():
     answer = 0
     for equation in input:
-        if determineValidEquation(equation, operations_2):
+        if determineValidEquation(equation, False):
             answer += equation[0]
-
     print("answer part 2:", answer)
     assert answer in [11387, 328790210468594], "answer is wrong " + str(answer)
     pass
 
 
-def determineValidEquation(equation, operations):
-    lhs = equation[0]
+def determineValidEquation(equation, isPart1=True):
+    lhs = int(equation[0])
     rhs = equation[1].split()
-    potentialEquations = [rhs.pop(0)]
+    currentTotals = [int(rhs.pop(0))]
+    tmpTotals = []
 
     while len(rhs) > 0:
-        current = rhs.pop(0)
-        tmpPotEqs = []
+        current = int(rhs.pop(0))
 
-        for potentialEquation in potentialEquations:
-            for operation in operations:
-                tmpPotEqs.append(str(potentialEquation) + operation)
+        for currentTotal in currentTotals:
+            plus = currentTotal + current
+            mult = currentTotal * current
+            if plus <= lhs:
+                tmpTotals.append(plus)
 
-        potentialEquations.clear()
-        for tmpPotEq in tmpPotEqs:
+            if mult <= lhs:
+                tmpTotals.append(mult)
+            if not isPart1:
+                combine = int(str(currentTotal) + str(current))
+                if combine <= lhs:
+                    tmpTotals.append(combine)
 
-            value = eval(tmpPotEq + current)
+        currentTotals = tmpTotals[:]
+        tmpTotals.clear()
 
-            if value <= lhs:
-                potentialEquations.append(value)
-
-    for potentialEquation in potentialEquations:
-        if lhs == potentialEquation:
+    for currentTotal in currentTotals:
+        if lhs == currentTotal:
             return True
 
     return False
@@ -92,11 +94,9 @@ operations_2 = ["+", "*", ""]
 
 input = init(lines)
 
-'''
-TODO dont do eval ... eval is evil 
-takes too long ... just do calculation straight away 
-
-'''
+"""
+NOTE dont do eval ... eval is evil 
+"""
 
 part1()
 part2()

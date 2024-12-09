@@ -122,7 +122,7 @@ for i in range(len(input)):
 
 '''
 part 2 is brute force ... definitely needs fixing :) 
-
+maybe can use part 1 to see whats traversed and change those to block one at a time 
 '''
 
 part1()
