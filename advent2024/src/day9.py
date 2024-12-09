@@ -120,7 +120,7 @@ def shiftIndexesTwo(numberIndexes):
 def findIndexGap(gap, firstIndex, numberIndexes):
     for i in range(len(numberIndexes) - 1):
         if numberIndexes[i][0] > firstIndex:
-            return 0 
+            return 0
         if numberIndexes[i + 1][0] - numberIndexes[i][0] > gap:
             index = numberIndexes[i][0] + 1
             if index > firstIndex:
@@ -149,67 +149,6 @@ def analyzeFileBlock(numberIndexes):
     return retval
 
 
-def convertToMemory(input):
-    retval = ""
-
-    counter = 0
-    for i in range(len(list(input))):
-        char = input[i]
-        multiplier = int(char)
-        # print(i, multiplier)
-
-        value = DOT
-        if i % 2 == 0:
-            value = str(counter)
-            counter += 1
-        retval += multiplier * value
-
-    return retval
-
-
-def moveMemories(memory):
-    retval = memory
-    while True:
-        compactedMemory = retval.replace(".", "")
-        strippedMemory = retval.replace(".", " ").strip()
-
-        if len(compactedMemory) == len(strippedMemory):
-            break
-
-        lastDigit = findLastDigitIndex(retval)
-        firstDot = retval.index(DOT)
-
-        retvalList = list(retval)
-
-        retvalList[firstDot] = retvalList[lastDigit]
-        retvalList[lastDigit] = DOT
-
-        retval = "".join(retvalList)
-
-    return retval
-
-
-def findLastDigitIndex(string):
-    reversed = util.reverseString(string)
-    reversedIndex = 0
-    for i in range(len(list(reversed))):
-        if reversed[i] != DOT:
-            reversedIndex = i
-            break
-
-    return len(string) - 1 - reversedIndex
-
-
-def calculateScore(string):
-    retval = 0
-    for i in range(len(list(string))):
-        char = string[i]
-        if char == DOT:
-            break
-        retval += i * int(char)
-    return retval
-
-
 filename = "..\\data\\d9_input.txt"
 # switchToTest()
 
@@ -220,9 +159,7 @@ lines = list(map(lambda x: x.strip(), lines))
 # print(*lines, sep="\n")
 
 input = init(lines)
-
 input = input[0]
-
 
 numberIndexes = []
 dotIndexes = []
@@ -230,5 +167,5 @@ dotIndexes = []
 populateIndexes(numberIndexes, dotIndexes)
 
 
-# part1()
-part2()
+part1()
+# part2()
