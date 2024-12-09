@@ -89,9 +89,6 @@ lines = list(map(lambda x: x.strip(), lines))
 
 # print(*lines, sep="\n")
 
-operations = ["+", "*"]
-operations_2 = ["+", "*", ""]
-
 input = init(lines)
 
 """

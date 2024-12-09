@@ -46,7 +46,7 @@ def part1():
     antinodes = set(antinodes)
     answer = len(antinodes)
     print("answer part 1:", answer)
-    # assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [14, 228], "answer is wrong " + str(answer)
     pass
 
 
@@ -63,7 +63,7 @@ def part2():
     antinodes = set(antinodes)
     answer = len(antinodes)
     print("answer part 2:", answer)
-    # assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [34, 766], "answer is wrong " + str(answer)
     pass
 
 
@@ -164,5 +164,10 @@ starMap = {}
 
 input = init(lines)
 
-# part1()
+
+'''
+TODO clean up 
+'''
+
+part1()
 part2()
