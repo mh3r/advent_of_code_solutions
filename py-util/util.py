@@ -16,7 +16,7 @@ def reverseString(input):
     retval = input[::-1] if not None else input
     return retval
 
-
+# dont use this .. just use tuple 
 def stringifyCoord(input):
     return f"{input[0]}_{input[1]}"
 
