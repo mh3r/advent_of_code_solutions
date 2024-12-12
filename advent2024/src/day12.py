@@ -52,14 +52,12 @@ def part2():
             answer += calculateDiscPerimeter(occupiedPlants)
 
     print("answer part 2:", answer)
-    # assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [1206, 855082], "answer is wrong " + str(answer)
     pass
 
 
 def markOccupiedPlants(startingY, startingX, parsed):
     targetCharacter = input[startingY][startingX]
-    if targetCharacter == "C":
-        debug = 1
 
     paths = [(startingY, startingX)]
     occupiedPlants = []
@@ -111,7 +109,9 @@ def calculateDiscPerimeter(occupiedPlants):
     sides = 0
 
     lrCoords = []
+    lrCoords2 = []
     tdCoords = []
+    tdCoords2 = []
 
     for plant in occupiedPlants:
         plantY, plantX = plant
@@ -121,18 +121,18 @@ def calculateDiscPerimeter(occupiedPlants):
             lrCoords.append((plantY, plantX - 1))
         # right
         if (plantY, plantX + 1) not in occupiedPlants:
-            lrCoords.append((plantY, plantX + 1))
-            pass
-        # top
+            lrCoords2.append((plantY, plantX + 1))
+        # top ... the switched the y n x orientation for easy simplify sides
         if (plantY - 1, plantX) not in occupiedPlants:
             tdCoords.append((plantX, plantY - 1))
         # bottom
         if (plantY + 1, plantX) not in occupiedPlants:
-            tdCoords.append((plantX, plantY + 1))
+            tdCoords2.append((plantX, plantY + 1))
 
     sides += simplifySides(lrCoords)
+    sides += simplifySides(lrCoords2)
     sides += simplifySides(tdCoords)
-    # todo the tdcoords
+    sides += simplifySides(tdCoords2)
 
     retval = sides * len(occupiedPlants)
     print(retval)
@@ -174,7 +174,5 @@ lines = list(map(lambda x: x.strip(), lines))
 
 input = init(lines)
 
-
-# part1()
-# 851486 is wrong apparently .. too low 
+part1()
 part2()
