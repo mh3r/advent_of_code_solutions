@@ -122,7 +122,7 @@ def calculateDiscPerimeter(occupiedPlants):
         # right
         if (plantY, plantX + 1) not in occupiedPlants:
             lrCoords2.append((plantY, plantX + 1))
-        # top ... the switched the y n x orientation for easy simplify sides
+        # top ... switched the y n x orientation for easy simplify sides
         if (plantY - 1, plantX) not in occupiedPlants:
             tdCoords.append((plantX, plantY - 1))
         # bottom
