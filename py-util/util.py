@@ -7,7 +7,7 @@
 import json
 
 
-ADJ_DIRS = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+ADJ_DIRS = [[-1, 0], [0, 1], [1, 0], [0, -1]]
 
 ADJ_DIRS_2 = [[0, 1], [0, -1], [1, 0], [-1, 0], [1, 1], [-1, 1], [-1, -1], [1, -1]]
 
@@ -16,7 +16,8 @@ def reverseString(input):
     retval = input[::-1] if not None else input
     return retval
 
-# dont use this .. just use tuple 
+
+# dont use this .. just use tuple
 def stringifyCoord(input):
     return f"{input[0]}_{input[1]}"
 
