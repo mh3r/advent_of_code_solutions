@@ -34,6 +34,10 @@ def printJson(object):
 def printObject(object):
     print(json.dumps(object, default=lambda x: x.__dict__, indent=2))
 
+def printBoard(board):
+    for line in board:
+        print(''.join(line))
+
 
 def manhattanDistance(a, b):
     ax, ay = a
