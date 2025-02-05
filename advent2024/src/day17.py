@@ -30,7 +30,10 @@ def part1():
     answer = 0
     answer = runner()
     print("answer part 1:", answer)
-    # assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [
+        "4,6,3,5,6,3,5,2,1,0",
+        "4,6,1,4,2,1,3,1,6",
+    ], "answer is wrong " + str(answer)
     pass
 
 
@@ -43,7 +46,7 @@ def part2():
 
 
 filename = "..\\data\\d17_input.txt"
-switchToTest()
+# switchToTest()
 
 abs_file_path = os.path.join(os.path.dirname(__file__), filename)
 lines = open(abs_file_path, "r").readlines()
@@ -89,7 +92,7 @@ def adv(operand):
 
 
 def bxl(operand):
-    REGISTERS[B] = xor(REGISTERS[B], operand)
+    REGISTERS[B] = REGISTERS[B] ^ operand
 
 
 def bst(operand):
@@ -103,7 +106,7 @@ def jnz(operand):
 
 
 def bxc(operand):
-    REGISTERS[B] = xor(REGISTERS[B], REGISTERS[C])
+    REGISTERS[B] = REGISTERS[B] ^ REGISTERS[C]
 
 
 def out(operand):
@@ -121,35 +124,33 @@ def cdv(operand):
     REGISTERS[C] = int(REGISTERS[A] / pow(2, operandValue))
 
 
-"""
-The cdv instruction (opcode 7) works exactly like the adv instruction except that the result is stored in the C register.
- (The numerator is still read from the A register.)
-"""
-
-
 def runner():
     while len(REGISTERS[PROGRAM]) - 1 > REGISTERS[COUNTER]:
         tmpCounter = REGISTERS[COUNTER]
 
         operand = REGISTERS[PROGRAM][tmpCounter + 1]
 
-        instructions[tmpCounter](operand)
+        instructions[REGISTERS[PROGRAM][tmpCounter]](operand)
 
         # do the thing
 
         if tmpCounter == REGISTERS[COUNTER]:
             REGISTERS[COUNTER] += 2
-    return ",".join(REGISTERS[OUTPUT])
-
-
-def xor(a, b):
-    return (a and not b) or (not a and b)
+    return ",".join(list(map(str, REGISTERS[OUTPUT])))
 
 
 instructions = [adv, bxl, bst, jnz, bxc, out, bdv, cdv]
 
 
-part1()
-part2()
+# part1()
+# part2()
 
+REGISTERS[A] = 2024
+REGISTERS[B] = 0
+REGISTERS[C] = 0
+REGISTERS[PROGRAM] = [0,3,5,4,3,0]
+REGISTERS[COUNTER] = 0
 
+print(runner())
+
+debug = 1
