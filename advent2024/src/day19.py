@@ -23,27 +23,19 @@ def switchToTest():
 def init(lines):
     retval = []
     for line in lines:
-
         if "," in line:
             stripes.update(line.split(", "))
         elif len(line) > 0:
             patterns.append(line.strip())
-
-        pass
     retval = lines if len(retval) == 0 else retval
     return retval
 
 
 def part1():
     answer = 0
-    practicalPatterns = []
     for pattern in patterns:
-        if isPractical(pattern):
-            practicalPatterns.append(pattern)
-            answer += 1
+        answer += 1 if waysToCreateCurry(pattern) > 0 else 0
 
-    patterns.clear()
-    patterns.extend(practicalPatterns)
     print("answer part 1:", answer)
     assert answer in [6, 313], "answer is wrong " + str(answer)
     pass
@@ -56,26 +48,8 @@ def part2():
         answer += waysToCreateCurry(pattern)
 
     print("answer part 2:", answer)
-    # assert answer in [0, 0], "answer is wrong " + str(answer)
+    assert answer in [16, 666491493769758], "answer is wrong " + str(answer)
     pass
-
-
-def isPractical(pattern):
-
-    subPatterns = [pattern]
-    analysed = []
-    for subPattern in subPatterns:
-        for stripe in stripes:
-            if subPattern.startswith(stripe):
-                tmp = subPattern[len(stripe) :]
-                if len(tmp) == 0:
-                    return True
-                else:
-                    if tmp not in analysed:
-                        analysed.append(tmp)
-                        subPatterns.append(tmp)
-
-    return False
 
 
 @cache
@@ -86,7 +60,7 @@ def waysToCreateCurry(pattern):
     for stripe in stripes:
         if pattern.startswith(stripe):
             tmp = pattern[len(stripe) :]
-            retval += 1 * waysToCreateCurry(tmp)
+            retval += waysToCreateCurry(tmp)
 
     return retval
 
