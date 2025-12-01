@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as https from 'https';
 import { COOKIE } from './creds.js';
 
-const YEAR = 2019
+const YEAR = 2025;
 const baseDir = `${process.cwd()}/advent${YEAR}`;
 const sourceDir = `${baseDir}/src`;
 const dataDir = `${baseDir}/data`;
