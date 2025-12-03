@@ -1,8 +1,6 @@
 import * as tools from '../../js-util/tools.js';
 
 const YEAR = the_year;
-const baseDir = `${process.cwd()}\\advent${YEAR}`;
-const dataDir = `${baseDir}\\data`;
 
 function part1(config) {
     let answer = 0;
@@ -21,6 +19,8 @@ function part2(config) {
 }
 
 function main() {
+    const baseDir = `${process.cwd()}\\advent${YEAR}`;
+    const dataDir = `${baseDir}\\data`;
     let inputFile = `${dataDir}\\dx_input.txt`;
     inputFile = `${baseDir}\\data\\test.txt`;
 
