@@ -21,6 +21,7 @@ function part2(config) {
 function main() {
     const baseDir = `${process.cwd()}\\advent${YEAR}`;
     const dataDir = `${baseDir}\\data`;
+    
     let inputFile = `${dataDir}\\dx_input.txt`;
     inputFile = `${baseDir}\\data\\test.txt`;
 
