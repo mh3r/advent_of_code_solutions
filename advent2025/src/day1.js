@@ -32,8 +32,7 @@ function part2(config) {
 
     let cursor = 50
     for (let instruction of config.instructions) {
-        const startingCursor = cursor
-        const projection = cursor += instruction
+        const projection = cursor + instruction
 
         if (projection >= 0 && projection < 100) {
             cursor = projection
@@ -43,22 +42,18 @@ function part2(config) {
             continue
         }
 
-
         let rotations = Math.abs(Math.trunc(projection / 100))
-        // unsure why cursor doesnt work here ... it doesnt get changed 
-
-        if (startingCursor > 0 && projection < 0) {
+        if (cursor > 0 && projection < 0) {
             rotations++
         }
         answer += rotations
-
         cursor = (projection % 100 + 100) % 100
     }
 
     console.log(`Part 2: ${answer}`)
     console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
 }
- 
+
 function main() {
     let inputFile = `${dataDir}\\d1_input.txt`;
     // inputFile = `${baseDir}\\data\\test.txt`;

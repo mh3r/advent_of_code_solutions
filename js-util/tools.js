@@ -78,5 +78,16 @@ export function removeAllDoubleSpaces(input) {
     return input
 }
 
+export function getAllIndexes(str, char) {
+    const indices = [];
+    let startIndex = 0;
+    let index
+    // Use indexOf in a loop, updating the start index after each find
+    while ((index = str.indexOf(char, startIndex)) !== -1) {
+        indices.push(index);
+        startIndex = index + 1; // Start the next search from the position after the last found index
+    }
+    return indices;
+}
 
 let debug = 1;

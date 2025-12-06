@@ -6,15 +6,24 @@ function part1(config) {
     let answer = 0;
     const correctAnswer = 6299564383938
 
-    for (let i = 0; i < config.data[0].length; i++) {
+    const rawData = []
+    let operator = []
 
-        const data = []
-        for (let value of config.data) {
-            data.push(value[i])
+    for (let i = 0; i < config.raw.length; i++) {
+        if (i === config.raw.length - 1) {
+            operator = tools.removeAllDoubleSpaces(config.raw[i].trim()).replaceAll("  ", " ").split(" ").filter(x => x)
+        } else {
+            rawData.push(tools.removeAllDoubleSpaces(config.raw[i].trim()).split(" ").map(x => parseInt(x)))
+        }
+    }
+
+    for (let i = 0; i < rawData[0].length; i++) {
+        const numbers = []
+        for (let value of rawData) {
+            numbers.push(value[i])
         }
 
-        answer += calculate(config.operator[i], data)
-        // console.log(answer)
+        answer += calculate(operator[i], numbers)
     }
 
     console.log(`Part 1: ${answer}`)
@@ -36,7 +45,7 @@ function part2(config) {
 
     const gridData = []
     const operatorLine = config.raw[config.raw.length - 1]
-    const operatorIndexes = [...getAllIndexes(operatorLine, '*'), ...getAllIndexes(operatorLine, '+')]
+    const operatorIndexes = [...tools.getAllIndexes(operatorLine, '*'), ...tools.getAllIndexes(operatorLine, '+')]
     operatorIndexes.sort((a, b) => a - b);
     for (let i = 0; i < config.raw.length; i++) {
         const line = config.raw[i]
@@ -46,7 +55,7 @@ function part2(config) {
     let grid
     for (let i = 0; i < operatorIndexes.length; i++) {
         const startIndex = operatorIndexes[i]
-        const endIndex = i + 1 == operatorIndexes.length ? gridData[0].length : operatorIndexes[i + 1] -1
+        const endIndex = i + 1 == operatorIndexes.length ? gridData[0].length : operatorIndexes[i + 1] - 1
 
         grid = []
         for (let j = 0; j < gridData.length; j++) {
@@ -64,7 +73,7 @@ function extractAndCalculateGrid(grid) {
     let numbers = []
 
     for (let c = 0; c < grid[0].length; c++) {
-    let numberStr = ''
+        let numberStr = ''
         for (let r = 0; r < grid.length - 1; r++) {
             numberStr += grid[r][c]
         }
@@ -73,22 +82,6 @@ function extractAndCalculateGrid(grid) {
 
     return calculate(operator, numbers)
 }
-
-
-function getAllIndexes(str, char) {
-    const indices = [];
-    let startIndex = 0;
-    let index
-    // Use indexOf in a loop, updating the start index after each find
-    while ((index = str.indexOf(char, startIndex)) !== -1) {
-        indices.push(index);
-        startIndex = index + 1; // Start the next search from the position after the last found index
-    }
-    return indices;
-}
-
-
-
 
 function main() {
     const baseDir = `${process.cwd()}\\advent${YEAR}`;
@@ -105,22 +98,7 @@ function main() {
         raw: lines
     }
 
-    const data = []
-
-    let operator = []
-
-
-    for (let i = 0; i < config.raw.length; i++) {
-        if (i === config.raw.length - 1) {
-            operator = tools.removeAllDoubleSpaces(config.raw[i].trim()).replaceAll("  ", " ").split(" ").filter(x => x)
-        } else {
-            data.push(tools.removeAllDoubleSpaces(config.raw[i].trim()).split(" ").map(x => parseInt(x)))
-        }
-    }
-    config.data = data
-    config.operator = operator
-
-    // part1({ ...config });
+    part1({ ...config });
     part2({ ...config });
 }
 
