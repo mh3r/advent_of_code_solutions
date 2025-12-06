@@ -66,5 +66,17 @@ export function manhattanDistance(coord1, coord2) {
     return Math.abs(y2 - y1) + Math.abs(x2 - x1)
 }
 
+export function removeAllDoubleSpaces(input) {
+    if (!input || input.length === 0) return input
+    let previousLength
+    do {
+        previousLength = input.length
+        input = input.replaceAll("  ", " ");
+    }
+    while (previousLength !== input.length)
+
+    return input
+}
+
 
 let debug = 1;
