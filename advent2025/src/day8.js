@@ -6,22 +6,19 @@ function part1(config) {
     let answer = 0;
     const correctAnswer = 97384
 
-
     const junctions = []
 
     for (const line of config.raw) {
         junctions.push(new Junction(line))
     }
 
-    for (const junction of junctions) {
-        const name = junction.name
-        const otherJunctions = junctions.filter(x => x.name != name)
-        junction.populateDistances(otherJunctions)
+    for (let i = 0; i < junctions.length - 1; i++) {
+        for (let j = i + 1; j < junctions.length; j++) {
+            junctions[i].populateDistances([junctions[j]])
+        }
     }
 
-
-    let circuits = connectCircuits(junctions)
-    circuits = assimilateCircuits(circuits)
+    let circuits = connectJunctions(junctions, config.reps)
 
     const circuitLengths = circuits.map(x => x.length)
     circuitLengths.sort((a, b) => b - a)
@@ -36,7 +33,7 @@ function part1(config) {
 }
 
 
-function assimilateCircuits(circuits) {
+function connectCircuits(circuits) {
     let retval = [...circuits]
 
     let junctions = []
@@ -69,7 +66,6 @@ function assimilateCircuits(circuits) {
     }
 
     return retval
-
 }
 
 function findDuplicates(arr) {
@@ -78,7 +74,7 @@ function findDuplicates(arr) {
     });
 };
 
-function connectCircuits(junctions, repetition = 1000) {
+function connectJunctions(junctions, repetition = 10) {
     let currentMinRange = 0;
     let circuits = []
 
@@ -119,6 +115,7 @@ function connectCircuits(junctions, repetition = 1000) {
                 tmpCircuits.push([key1, key2])
             }
             circuits = tmpCircuits
+            circuits = connectCircuits(circuits)
 
         }
         // console.log(mins)
@@ -141,17 +138,26 @@ function main() {
     const baseDir = `${process.cwd()}\\advent${YEAR}`;
     const dataDir = `${baseDir}\\data`;
 
+    let test = false
+    // test = true
+
     let inputFile = `${dataDir}\\d8_input.txt`;
-    // inputFile = `${baseDir}\\data\\test.txt`;
+    if (test) {
+        inputFile = `${baseDir}\\data\\test.txt`;
+    }
 
     console.log("Input File: " + inputFile);
     const lines = tools.readFileFromLocal(inputFile).split(/\r?\n/).filter(x => x);
     if (lines[lines.length - 1].length == 0) lines.pop();
 
     const config = {
-        raw: lines
+        raw: lines,
+        reps: 1000
     }
 
+    if (test) {
+        config.reps = 10
+    }
 
     part1({ ...config });
     part2({ ...config });
@@ -165,7 +171,6 @@ class Junction {
         this.x = parseInt(splitted[0])
         this.y = parseInt(splitted[1])
         this.z = parseInt(splitted[2])
-
     }
 
     populateDistances(junctions) {
@@ -193,4 +198,4 @@ class Junction {
 
 }
 
-main();
+main()
