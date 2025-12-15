@@ -18,8 +18,77 @@ function part2(config) {
     let answer = 0;
     const correctAnswer = undefined
 
+    for (const problem of config.problems) {
+        answer += deduceMinButtonPresses(problem)
+    }
+
+
     console.log(`Part 2: ${answer}`)
     console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
+}
+
+
+function deduceMinButtonPresses(problem) {
+
+    const { buttons, joltage } = problem
+
+    let currentCounters = [joltage]
+    let retval = 0
+    while (true) {
+        let tmpCounters = []
+
+        if (currentCounters.some(x => x.length == x.filter(y => y === 0).length)) {
+            return retval
+        }
+
+        for (const currentCounter of currentCounters) {
+            tmpCounters.push(...reduceCounter(currentCounter, buttons))
+        }
+
+        currentCounters = removeDuplicates(tmpCounters)
+
+        retval++
+
+    }
+
+}
+
+function removeDuplicates(counters) {
+
+    const seen = new Set();
+    for (const counter of counters) {
+        seen.add(counter.join(','))
+    }
+
+    return Array.from(seen).map(x => x.split(',').map(y => parseInt(y)));
+}
+
+function reduceCounter(counter, buttons) {
+    const retval = []
+
+    const positiveCounters = counter.filter(x => x > 0)
+    const minIndex = counter.indexOf(Math.min(...positiveCounters))
+
+    const buttonsThatMatter = buttons.filter(x => x.includes(minIndex))
+
+
+    let temp = []
+
+    for (const button of buttonsThatMatter) {
+        let counterCopy = [...counter]
+        for (const index of button) {
+            counterCopy[index]--
+        }
+        const negativeCounters = counterCopy.filter(x => x < 0)
+        if (negativeCounters.length === 0) {
+            temp.push(counterCopy)
+        }
+
+    }
+
+    retval.push(...temp)
+
+    return retval
 }
 
 function findSmallestPossibilities(problem) {
@@ -104,13 +173,14 @@ function main() {
         problems.push({
             pattern: pattern.split(",").map(x => parseInt(x))
             , buttons: buttons.map(x => x.split(",").map(y => parseInt(y)))
-            , joltage
+            , joltage: joltage.replace('{', '').replaceAll('}', '').split(',').map(x => parseInt(x))
         });
     }
 
     config.problems = problems
 
-    part1({ ...config });
+    // part1({ ...config });
+    // part 2 gets memory issue 
     part2({ ...config });
 }
 
