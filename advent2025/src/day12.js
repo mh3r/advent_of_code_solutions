@@ -1,40 +1,65 @@
-import * as tools from '../../js-util/tools.js';
+import * as tools from "../../js-util/tools.js";
 
 const YEAR = 2025;
 
-function part1(config) {
-    let answer = 0;
-    const correctAnswer = undefined
+// this is stupid
+// there is no need to figure out 
+// the most efficient shapes arrangements
+// the data input was designed to be solvable by 
+// treating all shapes to be a solid 3x3 blocks
+function part1(instructions) {
+  let answer = 0;
+  const correctAnswer = 422;
 
-    console.log(`Part 1: ${answer}`)
-    console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
+  for (const instruction of instructions) {
+    const area = instruction[0] * instruction[1];
+    const sum = instruction[2].reduce((a, b) => a + b, 0) * 9;
+    // console.log(`Area: ${area}, Sum: ${sum}`);
+
+    if (sum <= area) {
+      answer++;
+    }
+  }
+
+  console.log(`Part 1: ${answer}`);
+  console.assert(
+    correctAnswer === answer,
+    `${answer} should have been ${correctAnswer}`,
+  );
 }
 
-function part2(config) {
-    let answer = 0;
-    const correctAnswer = undefined
+function parseInstructions(lines) {
+  const output = [];
+  for (const line of lines) {
+    if (!line.includes("x")) continue; // Skip empty lines
 
-    console.log(`Part 2: ${answer}`)
-    console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
+    const dimensions = line.split(":")[0].trim().split("x").map(Number);
+    const data = line.split(":")[1].trim().split(" ").map(Number);
+    output.push([...dimensions, data]);
+  }
+
+  return output;
 }
 
 function main() {
-    const baseDir = `${process.cwd()}\\advent${YEAR}`;
-    const dataDir = `${baseDir}\\data`;
-    
-    let inputFile = `${dataDir}\\d12_input.txt`;
-    inputFile = `${baseDir}\\data\\test.txt`;
+  const baseDir = `${process.cwd()}\\advent${YEAR}`;
+  const dataDir = `${baseDir}\\data`;
 
-    console.log("Input File: " + inputFile);
-    const lines = tools.readFileFromLocal(inputFile).split(/\r?\n/).filter(x => x);
-    if (lines[lines.length - 1].length == 0) lines.pop();
+  let inputFile = `${dataDir}\\d12_input.txt`;
+  // inputFile = `${baseDir}\\data\\test.txt`;
 
-    const config = {
-        raw: lines
-    }
+  console.log("Input File: " + inputFile);
+  const lines = tools
+    .readFileFromLocal(inputFile)
+    .split(/\r?\n/)
+    .filter((x) => x);
+  if (lines[lines.length - 1].length == 0) lines.pop();
 
-    part1({ ...config });
-    part2({ ...config });
+  const config = {
+    raw: lines,
+    instructions: parseInstructions(lines),
+  };
+  part1([...config.instructions]);
 }
 
 main();
