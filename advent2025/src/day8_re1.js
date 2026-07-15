@@ -2,46 +2,44 @@ import * as tools from "../../js-util/tools.js";
 
 const YEAR = 2025;
 
-function part1(config) {
-  let answer = 0;
-  const correctAnswer = 97384;
+function run(config) {
+  let answerPt1 = 0;
+  let answerPt2 = 0;
+  const correctAnswerPt1 = 97384;
+  const correctAnswerPt2 = 9003685096;
 
-  const connectedJunctions = [];
-  const circuits = new Map();
-
+  const circuits = config.circuits;
   const junctionDistances = [...config.junctionDistances];
 
-  let connections = 0;
-  for (const junctionDistance of junctionDistances) {
+  for (let i = 0; i < junctionDistances.length; i++) {
+    const junctionDistance = junctionDistances[i];
     const junction1 = junctionDistance.junctions[0];
     const junction2 = junctionDistance.junctions[1];
 
-    const circuit1 = findCircuit(circuits, junction1);
-    const circuit2 = findCircuit(circuits, junction2);
+    connectCircuits(circuits, junction1, junction2);
 
-    connections += connectCircuits(circuits, circuit1, circuit2);
+    if (i === config.reps) {
+      answerPt1 = getPart1Answer(circuits);
+    }
 
-    if (connections === 9) {
-      answer = getPart1Answer(circuits);
+    if (circuits.size === 1) {
+      const xCoord1 = parseInt(junction1.split(",")[0]);
+      const xCoord2 = parseInt(junction2.split(",")[0]);
+      answerPt2 = xCoord1 * xCoord2;
       break;
     }
   }
 
-  console.log(`Part 1: ${answer}`);
+  console.log(`Part 1: ${answerPt1}`);
   console.assert(
-    correctAnswer === answer,
-    `${answer} should have been ${correctAnswer}`,
+    correctAnswerPt1 === answerPt1,
+    `${answerPt1} should have been ${correctAnswerPt1}`,
   );
-}
 
-function part2(config) {
-  let answer = 0;
-  const correctAnswer = undefined;
-
-  console.log(`Part 2: ${answer}`);
+  console.log(`Part 2: ${answerPt2}`);
   console.assert(
-    correctAnswer === answer,
-    `${answer} should have been ${correctAnswer}`,
+    correctAnswerPt2 === answerPt2,
+    `${answerPt2} should have been ${correctAnswerPt2}`,
   );
 }
 
@@ -55,36 +53,15 @@ function getPart1Answer(circuits) {
   return sizes[0] * sizes[1] * sizes[2];
 }
 
-function main() {
-  const baseDir = `${process.cwd()}\\advent${YEAR}`;
-  const dataDir = `${baseDir}\\data`;
-
-  let test = false;
-  test = true;
-
-  let inputFile = `${dataDir}\\d8_input.txt`;
-  if (test) {
-    inputFile = `${baseDir}\\data\\test.txt`;
-  }
-
-  console.log("Input File: " + inputFile);
-  const lines = tools
-    .readFileFromLocal(inputFile)
-    .split(/\r?\n/)
-    .filter((x) => x);
-  if (lines[lines.length - 1].length == 0) lines.pop();
-
+function prepareConfig(lines, test) {
   const config = {
     raw: lines,
   };
 
-  prepare(config);
+  config.reps = test ? 10 : 1000;
+  // adjusting for 0 index 
+  config.reps -= 1;
 
-  part1({ ...config });
-  part2({ ...config });
-}
-
-function prepare(config) {
   const junctionDistances = [];
   for (let i = 0; i < config.raw.length - 1; i++) {
     for (let j = i + 1; j < config.raw.length; j++) {
@@ -96,29 +73,40 @@ function prepare(config) {
 
   junctionDistances.sort((a, b) => a.distance - b.distance);
   config.junctionDistances = junctionDistances;
+
+  const circuits = new Map();
+  for (const junction of config.raw) {
+    circuits.set(junction, [junction]);
+  }
+  config.circuits = circuits;
+
+  return config;
 }
 
-function connectCircuits(circuits, circuit1, circuit2) {
-  if (circuit1 === circuit2) {
-    return 0;
+function connectCircuits(circuits, junction1, junction2) {
+  const circuitName1 = findCircuitName(circuits, junction1);
+  const circuitName2 = findCircuitName(circuits, junction2);
+
+  if (circuitName1 === circuitName2) {
+    return;
   }
-  const circuit1Junctions = circuits.get(circuit1);
-  const circuit2Junctions = circuits.get(circuit2);
+  const circuit1Junctions = circuits.get(circuitName1);
+  const circuit2Junctions = circuits.get(circuitName2);
 
   circuit1Junctions.push(...circuit2Junctions);
-
-  circuits.delete(circuit2);
-  return 1;
+  circuits.delete(circuitName2);
 }
 
-function findCircuit(circuits, junction) {
+function findCircuitName(circuits, junction) {
+  if (circuits.get(junction) && circuits.get(junction).length === 1) {
+    return junction;
+  }
+
   for (const circuit of circuits.keys()) {
     if (circuits.get(circuit).includes(junction)) {
       return circuit;
     }
   }
-  circuits.set(junction, [junction]);
-  return junction;
 }
 
 class JunctionDistance {
@@ -135,6 +123,30 @@ class JunctionDistance {
     const dz = junctionData1[2] - junctionData2[2];
     this.distance = Math.hypot(dx, dy, dz);
   }
+}
+
+function main() {
+  const baseDir = `${process.cwd()}\\advent${YEAR}`;
+  const dataDir = `${baseDir}\\data`;
+
+  let test = false;
+  // test = true;
+
+  let inputFile = `${dataDir}\\d8_input.txt`;
+  if (test) {
+    inputFile = `${baseDir}\\data\\test.txt`;
+  }
+
+  console.log("Input File: " + inputFile);
+  const lines = tools
+    .readFileFromLocal(inputFile)
+    .split(/\r?\n/)
+    .filter((x) => x);
+  if (lines[lines.length - 1].length == 0) lines.pop();
+
+  const config = prepareConfig(lines, test);
+
+  run({ ...config });
 }
 
 main();
