@@ -60,7 +60,7 @@ function main() {
     const dataDir = `${baseDir}\\data`;
 
     let inputFile = `${dataDir}\\d9_input.txt`;
-    inputFile = `${baseDir}\\data\\test.txt`;
+    // inputFile = `${baseDir}\\data\\test.txt`;
 
     console.log("Input File: " + inputFile);
     const lines = tools.readFileFromLocal(inputFile).split(/\r?\n/).filter(x => x);

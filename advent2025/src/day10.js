@@ -1,189 +1,273 @@
-import * as tools from '../../js-util/tools.js';
+import * as tools from "../../js-util/tools.js";
 
 const YEAR = 2025;
 
 function part1(config) {
-    let answer = 0;
-    const correctAnswer = 500
+  let answer = 0;
+  let answer1 = 0;
+  const correctAnswer = [7, 500];
+  // find out how long this for loop takes in seconds and mili
+  const startTime = Date.now();
+  for (const problem of config.problems) {
+    answer += findSmallestPossibilities(problem);
+  }
+  const endTime = Date.now();
+  console.log(`Part 1 loop took ${endTime - startTime} ms`);
 
-    for (const problem of config.problems) {
-        answer += findSmallestPossibilities(problem)
-    }
+  const startTime1 = Date.now();
 
-    console.log(`Part 1: ${answer}`)
-    console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
+  for (const problem of config.problems) {
+    answer1 += rev1(problem);
+  }
+  const endTime1 = Date.now();
+  console.log(
+    `Part 1 (alternative method) loop took ${endTime1 - startTime1} ms`,
+  );
+
+  console.log(`Part 1: ${answer}`);
+  console.log(`Part 1 (alternative method): ${answer1}`);
+
+  console.assert(
+    correctAnswer.includes(answer),
+    `${answer} should have been one of ${correctAnswer}`,
+  );
 }
 
 function part2(config) {
-    let answer = 0;
-    const correctAnswer = undefined
+  let answer = 0;
+  const correctAnswer = undefined;
 
-    for (const problem of config.problems) {
-        answer += deduceMinButtonPresses(problem)
-    }
+  for (const problem of config.problems) {
+    answer += deduceMinButtonPresses(problem);
+  }
 
-
-    console.log(`Part 2: ${answer}`)
-    console.assert(correctAnswer === answer, `${answer} should have been ${correctAnswer}`);
+  console.log(`Part 2: ${answer}`);
+  console.assert(
+    correctAnswer === answer,
+    `${answer} should have been ${correctAnswer}`,
+  );
 }
 
-
 function deduceMinButtonPresses(problem) {
+  const { buttons, joltage } = problem;
 
-    const { buttons, joltage } = problem
+  let currentCounters = [joltage];
+  let retval = 0;
+  while (true) {
+    let tmpCounters = [];
 
-    let currentCounters = [joltage]
-    let retval = 0
-    while (true) {
-        let tmpCounters = []
-
-        if (currentCounters.some(x => x.length == x.filter(y => y === 0).length)) {
-            return retval
-        }
-
-        for (const currentCounter of currentCounters) {
-            tmpCounters.push(...reduceCounter(currentCounter, buttons))
-        }
-
-        currentCounters = removeDuplicates(tmpCounters)
-
-        retval++
-
+    if (
+      currentCounters.some((x) => x.length == x.filter((y) => y === 0).length)
+    ) {
+      return retval;
     }
 
+    for (const currentCounter of currentCounters) {
+      tmpCounters.push(...reduceCounter(currentCounter, buttons));
+    }
+
+    currentCounters = removeDuplicates(tmpCounters);
+
+    retval++;
+  }
 }
 
 function removeDuplicates(counters) {
+  const seen = new Set();
+  for (const counter of counters) {
+    seen.add(counter.join(","));
+  }
 
-    const seen = new Set();
-    for (const counter of counters) {
-        seen.add(counter.join(','))
-    }
-
-    return Array.from(seen).map(x => x.split(',').map(y => parseInt(y)));
+  return Array.from(seen).map((x) => x.split(",").map((y) => parseInt(y)));
 }
 
 function reduceCounter(counter, buttons) {
-    const retval = []
+  const retval = [];
 
-    const positiveCounters = counter.filter(x => x > 0)
-    const minIndex = counter.indexOf(Math.min(...positiveCounters))
+  const positiveCounters = counter.filter((x) => x > 0);
+  const minIndex = counter.indexOf(Math.min(...positiveCounters));
 
-    const buttonsThatMatter = buttons.filter(x => x.includes(minIndex))
+  const buttonsThatMatter = buttons.filter((x) => x.includes(minIndex));
 
+  let temp = [];
 
-    let temp = []
-
-    for (const button of buttonsThatMatter) {
-        let counterCopy = [...counter]
-        for (const index of button) {
-            counterCopy[index]--
-        }
-        const negativeCounters = counterCopy.filter(x => x < 0)
-        if (negativeCounters.length === 0) {
-            temp.push(counterCopy)
-        }
-
+  for (const button of buttonsThatMatter) {
+    let counterCopy = [...counter];
+    for (const index of button) {
+      counterCopy[index]--;
     }
+    const negativeCounters = counterCopy.filter((x) => x < 0);
+    if (negativeCounters.length === 0) {
+      temp.push(counterCopy);
+    }
+  }
 
-    retval.push(...temp)
+  retval.push(...temp);
 
-    return retval
+  return retval;
 }
 
 function findSmallestPossibilities(problem) {
-    const { pattern, buttons } = problem;
-    const strPattern = pattern.join(',')
-    let retval = 0
-    for (retval = 1; retval <= buttons.length; retval++) {
-        const currentCombos = getUniqueCombo(buttons.length, retval)
-        for (const combo of currentCombos) {
-            let tempValue = []
-            for (const index of combo) {
-                tempValue = mergeArrays(tempValue, buttons[index])
-            }
-            tempValue.sort((a, b) => a - b)
-            if (tempValue.join(',') == strPattern) {
-                return retval
-            }
-        }
+  const { pattern, buttons } = problem;
+  const strPattern = pattern.join(",");
+  let retval = 0;
+  for (retval = 1; retval <= buttons.length; retval++) {
+    const currentCombos = getUniqueCombo(buttons.length, retval);
+    for (const combo of currentCombos) {
+      let tempValue = [];
+      for (const index of combo) {
+        tempValue = mergeArrays(tempValue, buttons[index]);
+      }
+      tempValue.sort((a, b) => a - b);
+      if (tempValue.join(",") == strPattern) {
+        return retval;
+      }
     }
+  }
 }
 
 function getUniqueCombo(length, limit) {
-    const key = `${length}|${limit}`
-    if (uniqueCombos[key]) return uniqueCombos[key];
+  const key = `${length}|${limit}`;
+  if (uniqueCombos[key]) return uniqueCombos[key];
 
-    if (limit == 1) {
-        Array.from({ length }, (value, index) => index).forEach(x => {
-            uniqueCombos[key] = uniqueCombos[key] || []
-            uniqueCombos[key].push([x])
-        })
-        return uniqueCombos[key]
+  if (limit == 1) {
+    Array.from({ length }, (value, index) => index).forEach((x) => {
+      uniqueCombos[key] = uniqueCombos[key] || [];
+      uniqueCombos[key].push([x]);
+    });
+    return uniqueCombos[key];
+  }
+
+  const retval = [];
+
+  for (const value of uniqueCombos[`${length}|${limit - 1}`]) {
+    let max = Math.max(...value);
+    for (let i = max + 1; i < length; i++) {
+      retval.push([...value, i]);
     }
-
-    const retval = []
-
-    for (const value of uniqueCombos[`${length}|${limit - 1}`]) {
-        let max = Math.max(...value)
-        for (let i = max + 1; i < length; i++) {
-            retval.push([...value, i])
-        }
-    }
-    uniqueCombos[key] = retval;
-    return uniqueCombos[key]
-
+  }
+  uniqueCombos[key] = retval;
+  return uniqueCombos[key];
 }
 
 function mergeArrays(array1, array2) {
-    const commonElements = array1.filter(value => array2.includes(value));
-    const retval = [...array1, ...array2].filter(x => !commonElements.includes(x))
+  const commonElements = array1.filter((value) => array2.includes(value));
+  const retval = [...array1, ...array2].filter(
+    (x) => !commonElements.includes(x),
+  );
 
-    return retval
+  return retval;
+}
+
+// create a class with
+class Problem {
+  constructor(pattern, buttons, joltage, buttonpresses) {
+    this.pattern = pattern;
+    this.buttons = buttons;
+    this.joltage = joltage;
+    this.buttonPresses = buttonpresses;
+  }
+}
+
+function rev1(problem) {
+  const problemTemp = new Problem(
+    problem.pattern,
+    problem.buttons,
+    problem.joltage,
+    [],
+  );
+
+  const uniqueCombos = [];
+  const problemPool = [problemTemp];
+  while (problemPool.length > 0) {
+    const problem = problemPool.shift();
+
+    if (problem.pattern.length === 0) {
+      return problem.buttonPresses.length;
+    }
+
+    for (let i = 0; i < problem.buttons.length; i++) {
+      if (problem.buttonPresses.includes(i)) {
+        continue;
+      }
+      const button = problem.buttons[i];
+      if (problem.pattern.every((x) => !button.includes(x))) {
+        continue;
+      }
+
+      const newPattern = mergeArrays(problem.pattern, button);
+      const newProblem = new Problem(
+        newPattern,
+        problem.buttons,
+        problem.joltage,
+        [...problem.buttonPresses, i],
+      );
+
+      let comboId = newProblem.buttonPresses.sort((a, b) => a - b).join(",");
+      if (uniqueCombos.includes(comboId)) {
+        continue;
+      }
+      uniqueCombos.push(comboId);
+      problemPool.push(newProblem);
+    }
+
+    // problemPool.sort((a, b) => a.buttonPresses.length - b.buttonPresses.length);
+  }
 }
 
 function main() {
-    const baseDir = `${process.cwd()}\\advent${YEAR}`;
-    const dataDir = `${baseDir}\\data`;
+  const baseDir = `${process.cwd()}\\advent${YEAR}`;
+  const dataDir = `${baseDir}\\data`;
 
-    let inputFile = `${dataDir}\\d10_input.txt`;
-    // inputFile = `${baseDir}\\data\\test.txt`;
+  let inputFile = `${dataDir}\\d10_input.txt`;
+  //   inputFile = `${baseDir}\\data\\test.txt`;
 
-    console.log("Input File: " + inputFile);
-    const lines = tools.readFileFromLocal(inputFile).split(/\r?\n/).filter(x => x);
-    if (lines[lines.length - 1].length == 0) lines.pop();
+  console.log("Input File: " + inputFile);
+  const lines = tools
+    .readFileFromLocal(inputFile)
+    .split(/\r?\n/)
+    .filter((x) => x);
+  if (lines[lines.length - 1].length == 0) lines.pop();
 
-    const config = {
-        raw: lines
-    }
+  const config = {
+    raw: lines,
+  };
 
-    const problems = []
+  const problems = [];
 
-    // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
-    for (let line of lines) {
-        line = line.replaceAll('[', '')
-        const firstSplit = line.split(']')
-        let pattern = firstSplit[0]
-        const rest = firstSplit[1].trim().replaceAll('(', '').replaceAll(')', '').split(' ')
+  // [.##.] (3) (1,3) (2) (2,3) (0,2) (0,1) {3,5,4,7}
+  for (let line of lines) {
+    line = line.replaceAll("[", "");
+    const firstSplit = line.split("]");
+    let pattern = firstSplit[0];
+    const rest = firstSplit[1]
+      .trim()
+      .replaceAll("(", "")
+      .replaceAll(")", "")
+      .split(" ");
 
-        pattern = tools.getAllIndexes(line, FENCE).join(',')
-        const buttons = rest
-        const joltage = buttons.pop()
+    pattern = tools.getAllIndexes(line, FENCE).join(",");
+    const buttons = rest;
+    const joltage = buttons.pop();
 
-        problems.push({
-            pattern: pattern.split(",").map(x => parseInt(x))
-            , buttons: buttons.map(x => x.split(",").map(y => parseInt(y)))
-            , joltage: joltage.replace('{', '').replaceAll('}', '').split(',').map(x => parseInt(x))
-        });
-    }
+    problems.push({
+      pattern: pattern.split(",").map((x) => parseInt(x)),
+      buttons: buttons.map((x) => x.split(",").map((y) => parseInt(y))),
+      joltage: joltage
+        .replace("{", "")
+        .replaceAll("}", "")
+        .split(",")
+        .map((x) => parseInt(x)),
+    });
+  }
 
-    config.problems = problems
+  config.problems = problems;
 
-    // part1({ ...config });
-    // part 2 gets memory issue 
-    part2({ ...config });
+  part1({ ...config });
+  // part 2 gets memory issue
+  // part2({ ...config });
 }
 
-const FENCE = '#'
-const uniqueCombos = {}
+const FENCE = "#";
+const uniqueCombos = {};
 main();
